@@ -1,0 +1,288 @@
+---
+title: "Comparing STR profiles with STRprofilerR"
+author: "Jared Andrews"
+date: "`r Sys.Date()`"
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{Comparing STR profiles with STRprofilerR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+# Introduction
+
+Cell lines drift, get mislabelled, and cross-contaminate each other. Short
+tandem repeat (STR) profiling is the standard way to catch it: genotype a panel
+of highly polymorphic repeat markers, and compare the result against the
+material the model was supposed to come from.
+
+**STRprofilerR** compares STR profiles to each other or to a
+reference database, scores the similarity three ways, flags samples that look
+mixed, and can search the Cellosaurus knowledge base for a match. It is an R
+port of the [strprofiler](https://github.com/j-andrews7/STRprofiler) Python
+package.
+
+**STRprofilerR is intended for research purposes only.** A low score is a
+prompt to investigate, not a verdict.
+
+```{r library, message = FALSE}
+library(STRprofilerR)
+```
+
+# Reading profiles
+
+STR files come in two shapes, and `readSTRProfiles()` reads both. A **long**
+file has one row per sample and one column per marker:
+
+```{r read-long}
+longFile <- system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR")
+head(read.csv(longFile, check.names = FALSE))
+```
+
+```{r read-long-2}
+profiles <- readSTRProfiles(longFile, sampleCol = "Sample Name")
+profiles
+```
+
+A **wide** file has one row per sample/marker pair, with the alleles spread
+across numbered columns. Columns whose names contain `Allele` are collected;
+size and height columns are ignored. Point `markerCol` at the marker column and
+the layout is detected automatically.
+
+Files of either shape, and of any supported format, can be read together. The
+marker set is the union across files, and samples missing a marker are recorded
+as untyped rather than as having no alleles — a distinction that matters,
+because untyped markers are skipped during scoring rather than counted as
+mismatches.
+
+```{r read-both}
+xlsxFile <- system.file("extdata", "ExampleSTR.xlsx", package = "STRprofilerR")
+
+if (requireNamespace("readxl", quietly = TRUE)) {
+    both <- readSTRProfiles(c(longFile, xlsxFile), sampleCol = "Sample Name")
+    print(both)
+}
+```
+
+## Alleles are stored pre-split
+
+Inside a `STRProfiles` object each marker is a
+`r Biocpkg("IRanges")` `CharacterList`, so the alleles for a sample are already
+a character vector rather than a string waiting to be split:
+
+```{r alleles}
+alleles(profiles)[["marker1"]]
+```
+
+Allele calls are cleaned on the way in: duplicates collapse, numeric alleles
+sort ahead of string ones, and a trailing `.0` is dropped while a genuine
+decimal such as `9.3` is kept.
+
+```{r clean}
+cleanAlleles("10.0,10,13,13.0,14,14 ")
+```
+
+## Marker names
+
+Instruments and databases spell markers inconsistently. `markerAliases()` holds
+the harmonisation table, applied by default:
+
+```{r markers}
+harmonizeMarkers(c("Penta D", "Penta_E", "vWA"))
+```
+
+Extend it with `extraAliases` when your instrument produces something the
+default table does not cover.
+
+Every marker is also classified at ingest, which is how amelogenin is found
+without you having to name the column:
+
+```{r marker-data}
+markerData(profiles)
+```
+
+## Metadata, not markers
+
+Database files often carry non-marker columns. Name them in `metadataCols` and
+they land in `sampleData()`, safely out of the scoring:
+
+```{r metadata}
+dbFile <- system.file("extdata", "main_database.csv", package = "STRprofilerR")
+reference <- readSTRProfiles(dbFile)
+
+dim(reference)
+head(sampleData(reference), 3)
+```
+
+This is worth being careful about. If `Center` were treated as a marker, two
+samples from the same institution would score as sharing a marker they never
+had.
+
+# Scoring
+
+Let $M$ be the markers where **both** profiles were typed, $s$ the number of
+alleles they share across those markers, and $q$ and $r$ the number of alleles
+each carries across those same markers:
+
+$$\textrm{Tanabe} = 100 \times \frac{2s}{q + r}
+\qquad
+\textrm{Masters (query)} = 100 \times \frac{s}{q}
+\qquad
+\textrm{Masters (reference)} = 100 \times \frac{s}{r}$$
+
+Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the two profiles
+and the score is unchanged. The Masters scores are not, and the asymmetry is the
+point. Masters (query) asks how much of the query the reference accounts for,
+which is the question when a query may be a contaminated or drifted derivative
+of a known line — a query containing everything the reference has *plus* extra
+alleles scores 100 on Masters (reference) while Tanabe drops.
+
+Amelogenin is a sex marker rather than a polymorphic STR, so it is left out
+unless you ask for it with `useAmel = TRUE`.
+
+```{r score}
+queries <- readSTRProfiles(longFile, sampleCol = "Sample Name")
+refs <- readSTRProfiles(
+    system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR"),
+    sampleCol = "Sample Name"
+)
+
+scoreProfiles(queries, refs)
+```
+
+Scoring is vectorised as a handful of sparse matrix products rather than a loop
+over pairs, so comparing a batch against a database of thousands is
+comfortable. `chunkSize` controls how many queries are held in memory at once,
+and `minScore` discards weak pairs as they are produced:
+
+```{r score-filter}
+scoreProfiles(queries, refs, minScore = 90)
+```
+
+# Comparing end to end
+
+`compareProfiles()` does the whole job: score, flag mixing, summarise.
+
+```{r compare}
+cmp <- compareProfiles(queries, refs)
+cmp
+```
+
+The summary carries one row per query — the best two hits, and everything
+passing each threshold:
+
+```{r summary}
+as.data.frame(summary(cmp))[, c("Sample", "mixed", "topHit", "nextBest")]
+```
+
+Leave `reference` out to compare a batch against itself, dropping
+self-comparisons:
+
+```{r compare-self}
+compareProfiles(refs)
+```
+
+## Mixing
+
+A diploid genome gives at most two alleles per autosomal marker. Consistently
+seeing three or more suggests more than one genome in the tube.
+`flagMixedSamples()` counts markers with **more than two** alleles and flags a
+sample when that count **exceeds** `threeAlleleThreshold`:
+
+```{r mixing}
+batch <- readSTRProfiles(
+    system.file("extdata", "Example_Batch_File.csv", package = "STRprofilerR")
+)
+
+flagMixedSamples(batch)
+```
+
+Treat it as a screen. A flagged sample is worth a look at its
+electropherogram; an unflagged one is not evidence of purity.
+
+# Writing results
+
+`writeSTRResults()` produces the file set the Python command line tool does:
+
+```{r write}
+outDir <- file.path(tempdir(), "strprofiler-vignette")
+written <- writeSTRResults(cmp, outDir)
+
+basename(written)
+```
+
+That is a summary table, one table per query listing every reference it was
+compared against with that reference's alleles, a self-contained HTML view of
+the summary, and a log recording the parameters, inputs, and versions used.
+
+# Querying Cellosaurus
+
+When you have no local reference for a line,
+[CLASTR](https://www.cellosaurus.org/str-search/) searches the human profiles in
+Cellosaurus. Check your marker names against its controlled vocabulary first —
+CLASTR silently ignores markers it does not recognise, which can quietly reduce
+a search to a handful of markers:
+
+```{r validate}
+validateClastrMarkers(markers(refs))
+```
+
+The query itself needs network access, so it is not run here:
+
+```{r clastr, eval = FALSE}
+profile <- c(
+    Amelogenin = "X", CSF1PO = "11,12", D2S1338 = "19,23", D3S1358 = "15,17",
+    D5S818 = "11,12", D7S820 = "10", D8S1179 = "10", D13S317 = "11,12",
+    D16S539 = "11,12", D18S51 = "13", D19S433 = "14", D21S11 = "29,30",
+    FGA = "20,22", PentaD = "11,13", PentaE = "14,16", TH01 = "6,9",
+    TPOX = "8,9", vWA = "17,19"
+)
+
+hits <- clastrQuery(profile, scoreFilter = 90)
+as.data.frame(hits)[, c("accession", "name", "score", "problem")]
+```
+
+A cell line with a known contamination history carries a note in `problem` —
+often the most useful column in the result. A result that CLASTR returns as two
+profiles appears as two rows, with `(Best)` and `(Worst)` appended to the
+accession.
+
+`clastrBatchQuery()` writes CLASTR's own multi-sheet workbook instead, when you
+want its presentation rather than the data.
+
+# The command line application
+
+The CLI is built on [Rapp](https://github.com/r-lib/Rapp). Install the launcher
+once:
+
+```{r cli-install, eval = FALSE}
+install.packages("Rapp")
+Rapp::install_pkg_cli_apps("STRprofilerR")
+```
+
+```bash
+strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
+strprofiler clastr --score-filter 90 -o ./results batch.csv
+strprofiler compare --help
+```
+
+Flags mirror the Python CLI, and both spellings are accepted, so
+`--sample-col` and `--sample_col` both work and existing invocations keep
+running. During development the app can be driven without installing a
+launcher:
+
+```{r cli-run, eval = FALSE}
+Rapp::run(system.file("exec", "strprofiler.R", package = "STRprofilerR"), "--help")
+```
+
+# Session info
+
+```{r session}
+sessionInfo()
+```

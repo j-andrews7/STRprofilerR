@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^AGENTS\.md$
+^CLAUDE\.md$
+^\.gitattributes$
+^LICENSE\.md$
+^STRprofilerR\.BiocCheck$

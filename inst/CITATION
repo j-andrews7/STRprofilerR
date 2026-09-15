@@ -1,0 +1,59 @@
+citHeader(
+    "STRprofilerR is an R port of the STRprofiler Python package. ",
+    "Please cite the STRprofiler paper. If you use the CLASTR functionality, ",
+    "please also cite Cellosaurus and CLASTR."
+)
+
+bibentry(
+    bibtype = "Article",
+    title = paste(
+        "STRprofiler: efficient comparisons of short tandem repeat profiles",
+        "for biomedical model authentication"
+    ),
+    author = c(
+        person("Jared M", "Andrews"),
+        person("Michael W", "Lloyd"),
+        person("Steven B", "Neuhauser"),
+        person("Margaret", "Bundy"),
+        person("Emily L", "Jocoy"),
+        person("Susan D", "Airhart"),
+        person("Carol J", "Bult"),
+        person("Yvonne A", "Evrard"),
+        person("Jeffrey H", "Chuang"),
+        person("Suzanne", "Baker")
+    ),
+    journal = "Bioinformatics",
+    year = "2024",
+    doi = "10.1093/bioinformatics/btae713"
+)
+
+bibentry(
+    bibtype = "Article",
+    title = "The Cellosaurus, a cell-line knowledge resource",
+    author = person("Amos", "Bairoch"),
+    journal = "Journal of Biomolecular Techniques",
+    volume = "29",
+    number = "2",
+    pages = "25--38",
+    year = "2018",
+    doi = "10.7171/jbt.18-2902-002"
+)
+
+bibentry(
+    bibtype = "Article",
+    title = paste(
+        "CLASTR: The Cellosaurus STR similarity search tool -",
+        "A precious help for cell line authentication"
+    ),
+    author = c(
+        person("Thomas", "Robin"),
+        person("Amanda", "Capes-Davis"),
+        person("Amos", "Bairoch")
+    ),
+    journal = "International Journal of Cancer",
+    volume = "146",
+    number = "5",
+    pages = "1299--1306",
+    year = "2020",
+    doi = "10.1002/ijc.32639"
+)

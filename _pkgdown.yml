@@ -1,0 +1,51 @@
+url: https://j-andrews7.github.io/STRprofilerR/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Reading and writing profiles
+  desc: Getting STR profiles in and out of a STRProfiles object.
+  contents:
+  - readSTRProfiles
+  - STRProfiles
+  - writeSTRProfiles
+  - cleanAlleles
+
+- title: The STRProfiles class
+  contents:
+  - STRProfiles-class
+  - STRProfiles-accessors
+  - STRProfiles-methods
+
+- title: Marker handling
+  desc: Harmonising and classifying marker names.
+  contents:
+  - markerAliases
+  - amelogeninMarkers
+  - classifyMarkers
+
+- title: Scoring and comparison
+  contents:
+  - scoreProfiles
+  - scoreQuery
+  - flagMixedSamples
+  - summarizeMatches
+  - compareProfiles
+
+- title: Results
+  contents:
+  - STRComparison-class
+  - STRComparison-accessors
+  - writeSTRResults
+  - strHTMLTable
+
+- title: Cellosaurus and CLASTR
+  contents:
+  - clastrQuery
+  - clastrBatchQuery
+  - clastrMarkers
+
+- title: Package
+  contents:
+  - STRprofilerR-package

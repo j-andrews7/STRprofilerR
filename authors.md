@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/j-andrews7/STRprofilerR/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/j-andrews7/STRprofilerR/blob/devel/inst/CITATION)
 
 Andrews J, Lloyd M, Neuhauser S, Bundy M, Jocoy E, Airhart S, Bult C,
 Evrard Y, Chuang J, Baker S (2024). “STRprofiler: efficient comparisons

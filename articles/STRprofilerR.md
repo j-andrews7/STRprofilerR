@@ -320,11 +320,11 @@ outDir <- file.path(tempdir(), "strprofiler-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260923.20_50_59.csv" 
-#> [2] "SampleA.strprofiler.20260923.20_50_59.csv"      
-#> [3] "SampleB.strprofiler.20260923.20_50_59.csv"      
-#> [4] "full_summary.strprofiler.20260923.20_50_59.html"
-#> [5] "strprofiler.20260923.20_50_59.log"
+#> [1] "full_summary.strprofiler.20260923.20_54_08.csv" 
+#> [2] "SampleA.strprofiler.20260923.20_54_08.csv"      
+#> [3] "SampleB.strprofiler.20260923.20_54_08.csv"      
+#> [4] "full_summary.strprofiler.20260923.20_54_08.html"
+#> [5] "strprofiler.20260923.20_54_08.log"
 ```
 
 That is a summary table, one table per query listing every reference it

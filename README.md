@@ -135,6 +135,14 @@ whose scoring assertions are ported into the R test suite. They should agree
 score-for-score. Deliberate differences are listed in the documentation of the
 affected functions, and those of the Shiny application in `?STRprofilerApp`.
 
+## AI usage
+
+Large language models (LLMs), including Anthropic's Claude Opus 5 and Opus 5.5
+and Google's Gemini 3.5 Flash, were used to help port this package from the
+Python original. The port is checked against the Python package as described
+above; if you find a discrepancy, please
+[open an issue](https://github.com/j-andrews7/STRprofilerR/issues).
+
 ## Citation
 
 If you use STRprofilerR, please cite the original STRprofiler paper:

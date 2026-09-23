@@ -46,4 +46,6 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual", "--no-build-vignettes")'
+          # Vignettes must be built: R CMD check warns about a vignette with
+          # no built copy in inst/doc, and warnings fail this job.
+          build_args: 'c("--no-manual")'

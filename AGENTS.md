@@ -110,7 +110,7 @@ R CMD check --no-build-vignettes STRprofilerR_*.tar.gz     # Quick check
 ## CI/CD
 
 - **R-CMD-check.yaml** - Runs `R CMD check` on push/PR to main/master.
-- **pkgdown.yaml** - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses `use-public-rspm: true` for fast binary installs on Ubuntu.
+- **pkgdown.yaml** - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses `use-public-rspm: true` for fast binary installs on Ubuntu. It deletes `AGENTS.md` from the checkout before building, since pkgdown publishes every top-level `.md` file and `.Rbuildignore` doesn't stop it, and deploys with `clean: true` so dropped pages are removed.
 
 ## Coding Conventions
 

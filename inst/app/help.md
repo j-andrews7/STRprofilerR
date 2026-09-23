@@ -145,7 +145,7 @@ STRprofilerR is a port of the [STRprofiler](https://github.com/j-andrews7/STRpro
 
 STRprofiler is provided under the MIT license. If you use this app in your research, please cite:
 
-Jared M Andrews, Michael W Lloyd, Steven B Neuhauser, Margaret Bundy, Emily L Jocoy, Susan D Airhart, Carol J Bult, Yvonne A Evrard, Jeffrey H Chuang, Suzanne Baker. STRprofiler: efficient comparisons of short tandem repeat profiles for biomedical model authentication. *Bioinformatics*, 2024, btae713. DOI: [10.1093/bioinformatics/btae713](https://doi.org/10.1093/bioinformatics/btae713); PMID: [39589865](https://pubmed.ncbi.nlm.nih.gov/39589865/)
+Jared M Andrews\*, Michael W Lloyd\*, Steven B Neuhauser, Margaret Bundy, Emily L Jocoy, Susan D Airhart, Carol J Bult, Yvonne A Evrard, Jeffrey H Chuang, Suzanne Baker. STRprofiler: efficient comparisons of short tandem repeat profiles for biomedical model authentication. *Bioinformatics*, 2024, btae713. DOI: [10.1093/bioinformatics/btae713](https://doi.org/10.1093/bioinformatics/btae713); PMID: [39589865](https://pubmed.ncbi.nlm.nih.gov/39589865/)
 
 If you use the Cellosaurus database in the app, please also cite:
 

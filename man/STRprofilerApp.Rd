@@ -108,7 +108,7 @@ if (requireNamespace("shiny", quietly = TRUE) &&
 Andrews JM, Lloyd MW, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD, Bult CJ,
 Evrard YA, Chuang JH, Baker S (2024). STRprofiler: efficient comparisons of
 short tandem repeat profiles for biomedical model authentication.
-\emph{Bioinformatics}, btae713. \doi{10.1093/bioinformatics/btae713}
+\emph{Bioinformatics}, btae713. \doi{10.1093/bioinformatics/btae713}.
 }
 \seealso{
 \code{\link[=compareProfiles]{compareProfiles()}} and \code{\link[=clastrQuery]{clastrQuery()}}, which the application

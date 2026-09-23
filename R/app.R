@@ -82,7 +82,7 @@
 #' Andrews JM, Lloyd MW, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD, Bult CJ,
 #' Evrard YA, Chuang JH, Baker S (2024). STRprofiler: efficient comparisons of
 #' short tandem repeat profiles for biomedical model authentication.
-#' *Bioinformatics*, btae713. \doi{10.1093/bioinformatics/btae713}
+#' *Bioinformatics*, btae713. \doi{10.1093/bioinformatics/btae713}. 
 #'
 #' @seealso [compareProfiles()] and [clastrQuery()], which the application
 #'   calls.
@@ -160,7 +160,7 @@ STRprofilerApp <- function(database = NULL, sampleCol = "Sample", markerCol = "M
     missing <- pkgs[!vapply(pkgs, requireNamespace, logical(1), quietly = TRUE)]
     if (length(missing) > 0L) {
         stop(
-            "The STRprofiler application needs the ",
+            "The STRprofilerR application needs the ",
             paste0("'", missing, "'", collapse = ", "), " package(s).\n",
             "Install with BiocManager::install(c(",
             paste0("\"", missing, "\"", collapse = ", "), ")).",
@@ -175,10 +175,48 @@ STRprofilerApp <- function(database = NULL, sampleCol = "Sample", markerCol = "M
         "#version {padding: 8px;}",
         ".card-body {padding-top: 6px; padding-bottom: 6px;}",
         "table.dataTable, .table {font-size: 12px;}",
+        # Results tables fit their card rather than scrolling: headers wrap, and
+        # the sort arrows take less room than DataTables' default. Marker names
+        # have no spaces, so they may break mid-name, but only when the table
+        # would not otherwise fit (see .fitTablesJS()).
+        "table.dataTable thead th {white-space: normal; vertical-align: bottom; font-size: 11px;}",
+        "table.dataTable.strprofiler-tight thead th {overflow-wrap: anywhere;}",
+        paste(
+            "table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > th.sorting_asc,",
+            "table.dataTable thead > tr > th.sorting_desc {padding-right: 14px !important;}"
+        ),
+        paste(
+            "table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.sorting:after,",
+            "table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_asc:after,",
+            "table.dataTable thead > tr > th.sorting_desc:before,",
+            "table.dataTable thead > tr > th.sorting_desc:after {right: 3px !important;}"
+        ),
         ".strprofiler-hr {margin: 8px 0 !important;}",
         ".strprofiler-footer {font-size: 12px; opacity: 0.8; text-align: center; padding: 8px 12px 16px;}",
         "#strprofiler-help {max-width: 1000px; margin: 0 auto; padding: 12px;}",
         "#strprofiler-help img {display: block; margin: 12px auto;}",
+        sep = "\n"
+    )
+}
+
+# Mark a results table "tight" only while it is too wide for its card, which
+# lets its headers break mid-name. Doing this unconditionally would break them
+# whenever space is short, even where wrapping at spaces would have sufficed.
+# Called from each table's drawCallback, and again on resize and tab changes.
+.fitTablesJS <- function() {
+    paste(
+        "function strprofilerFitTable(t) {",
+        "  if (!t || !t.offsetParent) return;",
+        "  t.classList.remove('strprofiler-tight');",
+        "  if (t.getBoundingClientRect().width > t.parentElement.clientWidth + 1) {",
+        "    t.classList.add('strprofiler-tight');",
+        "  }",
+        "}",
+        "function strprofilerFitTables() {",
+        "  document.querySelectorAll('table.dataTable').forEach(strprofilerFitTable);",
+        "}",
+        "window.addEventListener('resize', strprofilerFitTables);",
+        "document.addEventListener('shown.bs.tab', strprofilerFitTables);",
         sep = "\n"
     )
 }
@@ -191,11 +229,11 @@ STRprofilerApp <- function(database = NULL, sampleCol = "Sample", markerCol = "M
     shiny::tags$footer(
         class = "strprofiler-footer",
         shiny::strong("For research use only."),
-        " If you use STRprofiler, please cite: ",
+        " If you use STRprofilerR, please cite: ",
         shiny::tags$a(
             href = .APP_LINKS$paper, target = "_blank", rel = "noopener",
             paste(
-                "Andrews JM, et al. STRprofiler: efficient comparisons of short tandem repeat",
+                "Andrews JM*, Lloyd MW*, et al. STRprofiler: efficient comparisons of short tandem repeat",
                 "profiles for biomedical model authentication. Bioinformatics (2024)."
             )
         )
@@ -227,12 +265,13 @@ STRprofilerApp <- function(database = NULL, sampleCol = "Sample", markerCol = "M
             href = .APP_LINKS$docs, target = "_blank", rel = "noopener",
             shiny::tags$img(src = .appAsset("logo.png"), height = "70px", alt = "STRprofiler")
         ),
-        window_title = "STR Profiler",
+        window_title = "STRprofilerR",
         theme = bslib::bs_theme(version = 5, bootswatch = "superhero"),
         fillable = FALSE,
         header = shiny::tags$head(
-            shiny::tags$link(rel = "icon", href = .appAsset("favicon.ico")),
-            shiny::tags$style(shiny::HTML(.appCSS()))
+            shiny::tags$link(rel = "icon", href = .appAsset("logo.ico")),
+            shiny::tags$style(shiny::HTML(.appCSS())),
+            shiny::tags$script(shiny::HTML(.fitTablesJS()))
         ),
         footer = .citationFooter(),
         bslib::nav_panel("Single Query", .singleQueryUI("single")),

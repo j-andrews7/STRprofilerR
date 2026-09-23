@@ -139,10 +139,11 @@ affected functions, and those of the Shiny application in `?STRprofilerApp`.
 
 If you use STRprofilerR, please cite the original STRprofiler paper:
 
-> Andrews JM, Lloyd MW, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD, Bult CJ,
+> Andrews JM\*, Lloyd MW\*, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD, Bult CJ,
 > Evrard YA, Chuang JH, Baker S. STRprofiler: efficient comparisons of short
 > tandem repeat profiles for biomedical model authentication. *Bioinformatics*
 > 2024. https://doi.org/10.1093/bioinformatics/btae713
+
 
 If you use the CLASTR functionality, please also cite Cellosaurus and CLASTR:
 

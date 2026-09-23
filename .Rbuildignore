@@ -9,3 +9,4 @@
 ^\.gitattributes$
 ^LICENSE\.md$
 ^STRprofilerR\.BiocCheck$
+^deploy$

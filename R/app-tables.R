@@ -290,7 +290,21 @@
         x <- cbind(x, flags)
         defs <- list(
             list(visible = FALSE, targets = match(flagCols, colnames(x)) - 1L),
-            list(className = "dt-center", targets = match(markerCols, colnames(x)) - 1L)
+            list(
+                className = "dt-center",
+                targets = match(markerCols, colnames(x)) - 1L,
+                # Sorting comma-joined allele strings is not meaningful, and the
+                # sort arrows would widen every marker column.
+                orderable = FALSE,
+                # Let multi-allele cells wrap after a comma so the table fits
+                # its card. Display only: sorting, search, and downloads see the
+                # plain value.
+                render = DT::JS(
+                    "function(data, type) {",
+                    "  return type === 'display' && typeof data === 'string' ? data.replace(/,/g, ',<wbr>') : data;",
+                    "}"
+                )
+            )
         )
     }
 
@@ -299,10 +313,23 @@
         rownames = FALSE,
         escape = if (length(html)) setdiff(visible, html) else TRUE,
         selection = "none",
+        # Bootstrap 5's compact table; DT's own "compact" maps to Bootstrap 3's.
+        class = "display table-sm",
         # bslib cards are fill containers, which would otherwise stretch the
         # table to an arbitrary height.
         fillContainer = FALSE,
-        options = list(pageLength = 25, scrollX = TRUE, columnDefs = defs)
+        # No scrollX: columns shrink and wrap to fit the card instead.
+        options = list(
+            pageLength = 25,
+            autoWidth = FALSE,
+            columnDefs = defs,
+            # Defined in the page head by .fitTablesJS().
+            drawCallback = DT::JS(
+                "function() {",
+                "  if (window.strprofilerFitTable) strprofilerFitTable(this.api().table().node());",
+                "}"
+            )
+        )
     )
 
     if (length(flagCols) > 0L) {

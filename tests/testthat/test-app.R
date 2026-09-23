@@ -206,6 +206,8 @@ test_that("results render as a DT widget with mismatches highlighted", {
     expect_match(as.character(w$x$options$rowCallback), "#ec7a80", fixed = TRUE)
     # Logical flags render as text rather than JavaScript booleans.
     expect_identical(w$x$data[["Mixed Sample"]], c("FALSE", "", ""))
+    # Tables fit their card instead of scrolling sideways.
+    expect_null(w$x$options$scrollX)
 })
 
 test_that("download names are stamped as strprofiler stamps them", {
@@ -250,6 +252,8 @@ test_that("the page carries the navigation, theme, and citation", {
         expect_match(html, tab, fixed = TRUE)
     }
     expect_match(html, "10.1093/bioinformatics/btae713", fixed = TRUE)
+    # Andrews and Lloyd are co-first authors, so both are named in the footer.
+    expect_match(html, "Andrews JM*, Lloyd MW*", fixed = TRUE)
     expect_match(html, "strprofilerr/logo.png", fixed = TRUE)
     expect_match(html, paste0("v", as.character(utils::packageVersion("STRprofilerR"))), fixed = TRUE)
 })

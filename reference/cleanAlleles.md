@@ -61,8 +61,8 @@ and
 [`STRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles.md)
 are stricter still and honour `keepCalls` at amelogenin markers only,
 since a letter at any other marker is a failed call rather than a sex
-call. `strprofiler` 0.5.0 keeps `X`/`Y` at every marker; through 0.4.2
-it scored every one of these codes as an ordinary allele.
+call. `strprofiler` (from 0.5.0) keeps `X`/`Y` at every marker; through
+0.4.2 it scored every one of these codes as an ordinary allele.
 
 ## Author
 

@@ -334,11 +334,11 @@ command line tool does:</p>
 <span><span class="va">written</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/writeSTRResults.html">writeSTRResults</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="va">outDir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">written</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260923.15_49_30.csv" </span></span>
-<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260923.15_49_30.csv"      </span></span>
-<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260923.15_49_30.csv"      </span></span>
-<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260923.15_49_30.html"</span></span>
-<span><span class="co">#&gt; [5] "strprofiler.20260923.15_49_30.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260923.18_40_03.csv" </span></span>
+<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260923.18_40_03.csv"      </span></span>
+<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260923.18_40_03.csv"      </span></span>
+<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260923.18_40_03.html"</span></span>
+<span><span class="co">#&gt; [5] "strprofiler.20260923.18_40_03.log"</span></span></code></pre></div>
 <p>That is a summary table, one table per query listing every reference
 it was compared against with that reference’s alleles, a self-contained
 HTML view of the summary, and a log recording the parameters, inputs,
@@ -385,7 +385,8 @@ Install the launcher once:</p>
 <span><span class="fu">Rapp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rapp/man/install_pkg_cli_apps.html" class="external-link">install_pkg_cli_apps</a></span><span class="op">(</span><span class="st">"STRprofilerR"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb20"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--database</span> refs.csv <span class="at">-o</span> ./results STR1.xlsx STR2.csv</span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a><span class="ex">strprofiler</span> clastr <span class="at">--score-filter</span> 90 <span class="at">-o</span> ./results batch.csv</span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--help</span></span></code></pre></div>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a><span class="ex">strprofiler</span> app <span class="at">--database</span> refs.csv</span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--help</span></span></code></pre></div>
 <p>Flags mirror the Python CLI, and both spellings are accepted, so
 <code>--sample-col</code> and <code>--sample_col</code> both work and
 existing invocations keep running. During development the app can be
@@ -394,9 +395,45 @@ driven without installing a launcher:</p>
 <code class="sourceCode R"><span><span class="fu">Rapp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rapp/man/run.html" class="external-link">run</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"exec"</span>, <span class="st">"strprofiler.R"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span>, <span class="st">"--help"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="the-shiny-application">The Shiny application<a class="anchor" aria-label="anchor" href="#the-shiny-application"></a>
+</h2>
+<p>For colleagues who would rather not write code,
+<code><a href="../reference/STRprofilerApp.html">STRprofilerApp()</a></code> serves the same comparisons in a web
+browser. It is a port of the <code>strprofiler</code> Python package’s
+application and needs the <code>shiny</code>, <code>bslib</code>, and
+<code>DT</code> packages.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Against your own database instead of the bundled one.</span></span>
+<span><span class="fu"><a href="../reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span>database <span class="op">=</span> <span class="st">"our_database.csv"</span><span class="op">)</span></span></code></pre></div>
+<p>The application has four tabs:</p>
+<ul>
+<li>
+<strong>Single Query</strong>: type a profile in marker by marker
+and score it against the database or search Cellosaurus with it. Alleles
+differing from the query are highlighted in the report.</li>
+<li>
+<strong>Batch Query</strong>: upload a file of profiles and compare
+it against the database, within itself, or against Cellosaurus.</li>
+<li>
+<strong>Database File Management</strong>: swap in a custom database
+for the session.</li>
+<li>
+<strong>Usage Guide</strong>: how to read the reports, and what to
+cite.</li>
+</ul>
+<p>From a shell,
+<code>strprofiler app --database our_database.csv</code> does the same.
+To host the application for others, deploy an <code>app.R</code> that
+calls <code><a href="../reference/STRprofilerApp.html">STRprofilerR::STRprofilerApp()</a></code> with your database.
+See <code><a href="../reference/STRprofilerApp.html">?STRprofilerApp</a></code> for where it differs from the Python
+original.</p>
+</div>
+<div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>

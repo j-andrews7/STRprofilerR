@@ -146,7 +146,7 @@ Sample names must be unique across all files.</p>
 
 
 <p><code>metadataCols</code> are held in <code><a href="STRProfiles-accessors.html">sampleData()</a></code> rather than alongside the markers.
-<code>strprofiler</code> 0.5.0 carries them in the profile and skips them at scoring and
+<code>strprofiler</code> (from 0.5.0) carries them in the profile and skips them at scoring and
 mixing time, so a custom metadata column has to be declared to each of those
 functions rather than once at ingest. (Through 0.4.2 it had no such argument,
 and two samples sharing a <code>Center</code> of <code>"JAX"</code> scored as sharing a marker.)</p>
@@ -155,7 +155,7 @@ in sorted order because it groups with <code>pandas</code>.</p>
 <p>All columns are read as text, so alleles are never coerced to numbers and
 back. This removes a class of bug that <code>strprofiler</code> patched twice through
 0.4.2 (alleles ending in zero being truncated, for example <code>10</code> becoming <code>1</code>);
-0.5.0 instead parses every call and renders it back.</p>
+since 0.5.0 it instead parses every call and renders it back.</p>
 </div>
 
     </div>

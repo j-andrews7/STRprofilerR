@@ -105,20 +105,42 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ``` bash
 strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
 strprofiler clastr --score-filter 90 -o ./results batch.csv
+strprofiler app --database refs.csv
 strprofiler compare --help
 ```
 
 Flags mirror the Python CLI. Both `--sample-col` and `--sample_col` are
 accepted, so existing invocations keep working.
 
+## Shiny application
+
+The Python package’s Shiny application is included, for single and batch
+queries against a reference database or Cellosaurus from a web browser.
+It needs the `shiny`, `bslib`, and `DT` packages:
+
+``` r
+
+BiocManager::install(c("shiny", "bslib", "DT"))
+
+STRprofilerR::STRprofilerApp()
+
+# Against your own database instead of the bundled one.
+STRprofilerR::STRprofilerApp(database = "our_database.csv")
+```
+
+To host it for others, e.g. on Posit Connect or Shiny Server, deploy an
+`app.R` containing
+`STRprofilerR::STRprofilerApp(database = "our_database.csv")`.
+
 ## Alignment with the Python package
 
 STRprofilerR is checked against [`strprofiler`
-0.5.0](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0),
+0.5.1](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.1),
 whose scoring assertions are ported into the R test suite. They should
-agree score-for-score.
-
-The Shiny application has not been ported yet.
+agree score-for-score. Deliberate differences are listed in the
+documentation of the affected functions, and those of the Shiny
+application in
+[`?STRprofilerApp`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md).
 
 ## Citation
 

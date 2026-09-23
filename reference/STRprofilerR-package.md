@@ -8,7 +8,7 @@ scores, heuristics for detecting sample mixing, flexible ingest of wide
 and long profile formats, comparison against user-supplied reference
 databases, and querying of the Cellosaurus knowledge base through the
 CLASTR REST API. A command line application is included for use in
-automated workflows.
+automated workflows, and a Shiny application for interactive queries.
 
 ## See also
 

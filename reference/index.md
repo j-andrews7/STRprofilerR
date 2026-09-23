@@ -87,6 +87,11 @@ Harmonising and classifying marker names.
   [`validateClastrMarkers()`](https://j-andrews7.github.io/STRprofilerR/reference/clastrMarkers.md)
   : Marker names accepted by the CLASTR API
 
+## Shiny application
+
+- [`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
+  : Launch the STRprofiler Shiny application
+
 ## Package
 
 - [`STRprofilerR`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerR-package.md)

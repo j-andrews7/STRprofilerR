@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Compare Short Tandem Repeat Profiles for Model Authentication">
-<meta name="description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows.">
-<meta property="og:description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows.">
+<meta name="description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.">
+<meta property="og:description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -184,14 +184,27 @@
 <span><span class="fu">Rapp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rapp/man/install_pkg_cli_apps.html" class="external-link">install_pkg_cli_apps</a></span><span class="op">(</span><span class="st">"STRprofilerR"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--database</span> refs.csv <span class="at">-o</span> ./results STR1.xlsx STR2.csv</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">strprofiler</span> clastr <span class="at">--score-filter</span> 90 <span class="at">-o</span> ./results batch.csv</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--help</span></span></code></pre></div>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">strprofiler</span> app <span class="at">--database</span> refs.csv</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--help</span></span></code></pre></div>
 <p>Flags mirror the Python CLI. Both <code>--sample-col</code> and <code>--sample_col</code> are accepted, so existing invocations keep working.</p>
+</div>
+<div class="section level2">
+<h2 id="shiny-application">Shiny application<a class="anchor" aria-label="anchor" href="#shiny-application"></a>
+</h2>
+<p>The Python package’s Shiny application is included, for single and batch queries against a reference database or Cellosaurus from a web browser. It needs the <code>shiny</code>, <code>bslib</code>, and <code>DT</code> packages:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shiny"</span>, <span class="st">"bslib"</span>, <span class="st">"DT"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">STRprofilerR</span><span class="fu">::</span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Against your own database instead of the bundled one.</span></span>
+<span><span class="fu">STRprofilerR</span><span class="fu">::</span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span>database <span class="op">=</span> <span class="st">"our_database.csv"</span><span class="op">)</span></span></code></pre></div>
+<p>To host it for others, e.g. on Posit Connect or Shiny Server, deploy an <code>app.R</code> containing <code>STRprofilerR::STRprofilerApp(database = "our_database.csv")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="alignment-with-the-python-package">Alignment with the Python package<a class="anchor" aria-label="anchor" href="#alignment-with-the-python-package"></a>
 </h2>
-<p>STRprofilerR is checked against <a href="https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0" class="external-link"><code>strprofiler</code> 0.5.0</a>, whose scoring assertions are ported into the R test suite. They should agree score-for-score.</p>
-<p>The Shiny application has not been ported yet.</p>
+<p>STRprofilerR is checked against <a href="https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.1" class="external-link"><code>strprofiler</code> 0.5.1</a>, whose scoring assertions are ported into the R test suite. They should agree score-for-score. Deliberate differences are listed in the documentation of the affected functions, and those of the Shiny application in <code><a href="reference/STRprofilerApp.html">?STRprofilerApp</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>

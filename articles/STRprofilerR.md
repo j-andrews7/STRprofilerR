@@ -320,11 +320,11 @@ outDir <- file.path(tempdir(), "strprofiler-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260923.15_49_30.csv" 
-#> [2] "SampleA.strprofiler.20260923.15_49_30.csv"      
-#> [3] "SampleB.strprofiler.20260923.15_49_30.csv"      
-#> [4] "full_summary.strprofiler.20260923.15_49_30.html"
-#> [5] "strprofiler.20260923.15_49_30.log"
+#> [1] "full_summary.strprofiler.20260923.18_40_03.csv" 
+#> [2] "SampleA.strprofiler.20260923.18_40_03.csv"      
+#> [3] "SampleB.strprofiler.20260923.18_40_03.csv"      
+#> [4] "full_summary.strprofiler.20260923.18_40_03.html"
+#> [5] "strprofiler.20260923.18_40_03.log"
 ```
 
 That is a summary table, one table per query listing every reference it
@@ -384,6 +384,7 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ``` bash
 strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
 strprofiler clastr --score-filter 90 -o ./results batch.csv
+strprofiler app --database refs.csv
 strprofiler compare --help
 ```
 
@@ -396,6 +397,40 @@ installing a launcher:
 
 Rapp::run(system.file("exec", "strprofiler.R", package = "STRprofilerR"), "--help")
 ```
+
+## The Shiny application
+
+For colleagues who would rather not write code,
+[`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
+serves the same comparisons in a web browser. It is a port of the
+`strprofiler` Python package’s application and needs the `shiny`,
+`bslib`, and `DT` packages.
+
+``` r
+
+STRprofilerApp()
+
+# Against your own database instead of the bundled one.
+STRprofilerApp(database = "our_database.csv")
+```
+
+The application has four tabs:
+
+- **Single Query**: type a profile in marker by marker and score it
+  against the database or search Cellosaurus with it. Alleles differing
+  from the query are highlighted in the report.
+- **Batch Query**: upload a file of profiles and compare it against the
+  database, within itself, or against Cellosaurus.
+- **Database File Management**: swap in a custom database for the
+  session.
+- **Usage Guide**: how to read the reports, and what to cite.
+
+From a shell, `strprofiler app --database our_database.csv` does the
+same. To host the application for others, deploy an `app.R` that calls
+[`STRprofilerR::STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
+with your database. See
+[`?STRprofilerApp`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
+for where it differs from the Python original.
 
 ## Session info
 

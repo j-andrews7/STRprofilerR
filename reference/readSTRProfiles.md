@@ -110,11 +110,11 @@ empty allele. Sample names must be unique across all files.
 
 `metadataCols` are held in
 [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md)
-rather than alongside the markers. `strprofiler` 0.5.0 carries them in
-the profile and skips them at scoring and mixing time, so a custom
-metadata column has to be declared to each of those functions rather
-than once at ingest. (Through 0.4.2 it had no such argument, and two
-samples sharing a `Center` of `"JAX"` scored as sharing a marker.)
+rather than alongside the markers. `strprofiler` (from 0.5.0) carries
+them in the profile and skips them at scoring and mixing time, so a
+custom metadata column has to be declared to each of those functions
+rather than once at ingest. (Through 0.4.2 it had no such argument, and
+two samples sharing a `Center` of `"JAX"` scored as sharing a marker.)
 
 Row order follows the input files. `strprofiler` returns wide-format
 samples in sorted order because it groups with `pandas`.
@@ -122,7 +122,8 @@ samples in sorted order because it groups with `pandas`.
 All columns are read as text, so alleles are never coerced to numbers
 and back. This removes a class of bug that `strprofiler` patched twice
 through 0.4.2 (alleles ending in zero being truncated, for example `10`
-becoming `1`); 0.5.0 instead parses every call and renders it back.
+becoming `1`); since 0.5.0 it instead parses every call and renders it
+back.
 
 ## See also
 

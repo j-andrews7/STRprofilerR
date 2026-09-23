@@ -189,7 +189,7 @@ A diploid genome gives at most two alleles per autosomal marker. While models ca
 seeing three or more in many markers suggests more than one genome in the tube.
 
 To help identify such cases, STRprofilerR's `flagMixedSamples()` counts markers with **more than two** alleles and flags a
-sample when that count **exceeds** `threeAlleleThreshold` (2, by default).
+sample when that count **exceeds** `threeAlleleThreshold` (3, by default).
 
 ```{r mixing}
 batch <- readSTRProfiles(

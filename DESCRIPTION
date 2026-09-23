@@ -3,7 +3,7 @@ Title: Compare Short Tandem Repeat Profiles for Model Authentication
 Version: 0.99.0
 Authors@R:
     person("Jared", "Andrews", email = "jared.andrews07@gmail.com",
-           role = c("aut", "cre"))
+           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0780-6248"))
 Description: Compares short tandem repeat (STR) profiles to authenticate
     biomedical models such as cell lines and xenografts against the primary
     tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice),

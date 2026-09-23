@@ -84,7 +84,7 @@ cleanAlleles <- function(x, keepCalls = c("X", "Y")) {
     # An allele is a finite repeat count, or one of the calls 'keepCalls' permits.
     # is.finite() rather than !is.na(), so the "nan" and "inf" that as.numeric()
     # accepts are treated as the junk they are.
-    num <- suppressWarnings(as.numeric(flat))
+    num <- as.numeric(flat)
     isNum <- is.finite(num)
     permitted <- match(toupper(flat), toupper(keepCalls))
     isCall <- !isNum & !is.na(permitted)
@@ -461,13 +461,13 @@ writeSTRProfiles <- function(x, file, sampleCol = "Sample") {
             call. = FALSE
         )
     }
-    suppressMessages(
-        as.data.frame(
-            readxl::read_excel(path, col_types = "text", .name_repair = "minimal"),
-            check.names = FALSE,
-            stringsAsFactors = FALSE
-        )
+
+    as.data.frame(
+        readxl::read_excel(path, col_types = "text", .name_repair = "minimal"),
+        check.names = FALSE,
+        stringsAsFactors = FALSE
     )
+
 }
 
 .detectFormat <- function(df, markerCol) {

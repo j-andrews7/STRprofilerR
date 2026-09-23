@@ -146,7 +146,7 @@ application in
 
 If you use STRprofilerR, please cite the original STRprofiler paper:
 
-> Andrews JM, Lloyd MW, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD,
+> Andrews JM\*, Lloyd MW\*, Neuhauser SB, Bundy M, Jocoy EL, Airhart SD,
 > Bult CJ, Evrard YA, Chuang JH, Baker S. STRprofiler: efficient
 > comparisons of short tandem repeat profiles for biomedical model
 > authentication. *Bioinformatics* 2024.

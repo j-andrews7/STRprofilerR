@@ -123,6 +123,7 @@ CJ, Evrard YA, Chuang JH, Baker S (2024). STRprofiler: efficient
 comparisons of short tandem repeat profiles for biomedical model
 authentication. *Bioinformatics*, btae713.
 [doi:10.1093/bioinformatics/btae713](https://doi.org/10.1093/bioinformatics/btae713)
+.
 
 ## See also
 

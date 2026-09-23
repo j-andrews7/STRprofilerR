@@ -58,8 +58,6 @@ cmp <- compareProfiles(
     readSTRProfiles(f, sampleCol = "Sample Name"),
     readSTRProfiles(db, sampleCol = "Sample Name")
 )
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
 cmp
 #> class: STRComparison
 #> queries(2): SampleA SampleB

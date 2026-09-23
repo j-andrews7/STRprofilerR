@@ -111,13 +111,11 @@ peak or free text, and the per-sample count discarded is recorded in
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">scoreQuery</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>marker1 <span class="op">=</span> <span class="st">"12,14"</span>, marker2 <span class="op">=</span> <span class="st">"12"</span>, marker4 <span class="op">=</span> <span class="st">"13"</span>, AMEL <span class="op">=</span> <span class="st">"X"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="va">ref</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> DataFrame with 5 rows and 9 columns</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         query   reference nSharedMarkers nSharedAlleles nQueryAlleles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;character&gt; &lt;character&gt;      &lt;integer&gt;      &lt;integer&gt;     &lt;integer&gt;</span>

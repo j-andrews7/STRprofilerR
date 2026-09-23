@@ -95,8 +95,6 @@ marker:</p>
 <span><span class="co">#&gt; 2     SampleB  12, 14 11.3, 12   13,15    9,10   12,14    X</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">profiles</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="va">longFile</span>, sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span><span class="va">profiles</span></span>
 <span><span class="co">#&gt; class: STRProfiles</span></span>
 <span><span class="co">#&gt; samples(2): SampleA SampleB</span></span>
@@ -121,10 +119,6 @@ mismatches.</p>
 <span>    <span class="va">both</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">longFile</span>, <span class="va">xlsxFile</span><span class="op">)</span>, sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">both</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span><span class="co">#&gt; class: STRProfiles</span></span>
 <span><span class="co">#&gt; samples(4): SampleA SampleB Sample1 Sample3</span></span>
 <span><span class="co">#&gt; markers(7): marker1 marker2 ... AMEL marker3</span></span>
@@ -184,20 +178,6 @@ ignored for scoring purposes:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dbFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"main_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="va">dbFile</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">reference</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1258   18</span></span>
@@ -240,14 +220,10 @@ Tanabe drops.</p>
 left out unless you ask for it with <code>useAmel = TRUE</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">queries</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="va">longFile</span>, sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span><span class="va">refs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span>,</span>
 <span>    sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/scoreProfiles.html">scoreProfiles</a></span><span class="op">(</span><span class="va">queries</span>, <span class="va">refs</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DataFrame with 10 rows and 9 columns</span></span>
@@ -341,8 +317,6 @@ default).</p>
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"Example_Batch_File.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls</span></span>
-<span><span class="co">#&gt; else character(0)): NAs introduced by coercion</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/flagMixedSamples.html">flagMixedSamples</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sample_A Sample_B Sample_C </span></span>
@@ -360,11 +334,11 @@ command line tool does:</p>
 <span><span class="va">written</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/writeSTRResults.html">writeSTRResults</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="va">outDir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">written</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260923.21_25_58.csv" </span></span>
-<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260923.21_25_58.csv"      </span></span>
-<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260923.21_25_58.csv"      </span></span>
-<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260923.21_25_58.html"</span></span>
-<span><span class="co">#&gt; [5] "strprofiler.20260923.21_25_58.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260923.21_56_19.csv" </span></span>
+<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260923.21_56_19.csv"      </span></span>
+<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260923.21_56_19.csv"      </span></span>
+<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260923.21_56_19.html"</span></span>
+<span><span class="co">#&gt; [5] "strprofiler.20260923.21_56_19.log"</span></span></code></pre></div>
 <p>That is a summary table, one table per query listing every reference
 it was compared against with that reference’s alleles, a self-contained
 HTML view of the summary, and a log recording the parameters, inputs,

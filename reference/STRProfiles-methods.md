@@ -109,7 +109,6 @@ Jared Andrews
 ``` r
 f <- system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR")
 p <- readSTRProfiles(f, sampleCol = "Sample Name")
-#> Warning: NAs introduced by coercion
 
 dim(p)
 #> [1] 5 6

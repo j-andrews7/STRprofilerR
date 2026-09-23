@@ -102,19 +102,17 @@ q <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
-#> Warning: NAs introduced by coercion
 ref <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
-#> Warning: NAs introduced by coercion
 
 out <- file.path(tempdir(), "strprofiler-demo")
 written <- writeSTRResults(compareProfiles(q, ref), out)
 basename(written)
-#> [1] "full_summary.strprofiler.20260923.21_25_52.csv" 
-#> [2] "SampleA.strprofiler.20260923.21_25_52.csv"      
-#> [3] "SampleB.strprofiler.20260923.21_25_52.csv"      
-#> [4] "full_summary.strprofiler.20260923.21_25_52.html"
-#> [5] "strprofiler.20260923.21_25_52.log"              
+#> [1] "full_summary.strprofiler.20260923.21_56_13.csv" 
+#> [2] "SampleA.strprofiler.20260923.21_56_13.csv"      
+#> [3] "SampleB.strprofiler.20260923.21_56_13.csv"      
+#> [4] "full_summary.strprofiler.20260923.21_56_13.html"
+#> [5] "strprofiler.20260923.21_56_13.log"              
 ```

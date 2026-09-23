@@ -152,12 +152,4 @@ if (requireNamespace("shiny", quietly = TRUE) &&
         shiny::runApp(app)
     }
 }
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
-#> Warning: NAs introduced by coercion
 ```

@@ -117,12 +117,10 @@ q <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
-#> Warning: NAs introduced by coercion
 ref <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
-#> Warning: NAs introduced by coercion
 
 cmp <- compareProfiles(q, ref)
 cmp

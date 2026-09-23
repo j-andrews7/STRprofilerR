@@ -93,7 +93,6 @@ Jared Andrews
 ``` r
 f <- system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR")
 p <- readSTRProfiles(f, sampleCol = "Sample Name")
-#> Warning: NAs introduced by coercion
 
 markers(p)
 #> [1] "marker1" "marker2" "marker4" "PentaD"  "PentaE"  "AMEL"   
@@ -112,7 +111,7 @@ alleles(p)[["marker1"]]
 #> [[1]] 12 14
 #> [[2]] 12 14
 provenance(p)$timestamp
-#> [1] "2026-09-23 21:25:44 UTC"
+#> [1] "2026-09-23 21:56:06 UTC"
 
 # Correct a marker classification by hand.
 markerData(p)$class[markers(p) == "marker1"] <- "y-linked"

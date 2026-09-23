@@ -41,7 +41,6 @@ Jared Andrews
 ``` r
 db <- system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR")
 p <- readSTRProfiles(db, sampleCol = "Sample Name")
-#> Warning: NAs introduced by coercion
 
 out <- file.path(tempdir(), "profiles.csv")
 writeSTRProfiles(p, out)

@@ -53,7 +53,6 @@ Jared Andrews
 p <- readSTRProfiles(
     system.file("extdata", "Example_Batch_File.csv", package = "STRprofilerR")
 )
-#> Warning: NAs introduced by coercion
 
 flagMixedSamples(p)
 #> Sample_A Sample_B Sample_C 

@@ -5,10 +5,9 @@
 <!-- badges: end -->
 
 **STRprofilerR** compares short tandem repeat (STR) profiles to authenticate
-biomedical models — cell lines, xenografts, organoids — against the primary
+biomedical models (cell lines, xenografts, organoids) against the primary
 tissue they were derived from. It is an R port of the
-[strprofiler](https://github.com/j-andrews7/STRprofiler) Python package,
-targeting Bioconductor.
+[strprofiler](https://github.com/j-andrews7/STRprofiler) Python package.
 
 **STRprofilerR is intended for research purposes only.**
 
@@ -28,6 +27,9 @@ Amelogenin is excluded by default.
 
 ```r
 # install.packages("BiocManager")
+BiocManager::install("STRprofilerR")
+
+# Or for dev version from GitHub
 BiocManager::install("j-andrews7/STRprofilerR")
 ```
 
@@ -82,6 +84,12 @@ ignored:
 Pass `metadataCols` to keep non-marker columns (`Center` and `Passage` by
 default) out of scoring and in `sampleData()`.
 
+Calls that are not alleles — off-ladder (`OL`), ambiguous (`?`), `NR`, `ND`,
+free text — are discarded at ingest, and the per-sample count is recorded in
+`sampleData()$nDroppedCalls`. Amelogenin is the one marker whose calls are
+letters rather than repeat counts; `keepCalls` says which letters it accepts,
+`X` and `Y` by default.
+
 ## Command line
 
 The CLI is built on [Rapp](https://github.com/r-lib/Rapp):
@@ -100,12 +108,12 @@ strprofiler compare --help
 Flags mirror the Python CLI. Both `--sample-col` and `--sample_col` are
 accepted, so existing invocations keep working.
 
-## Differences from the Python package
+## Alignment with the Python package
 
-STRprofilerR is score-for-score identical to `strprofiler` — its test suite
-includes the Python suite's assertions verbatim — but diverges deliberately in
-several places, mostly to fix latent bugs. See
-[NEWS.md](NEWS.md) for the full list.
+STRprofilerR is checked against
+[`strprofiler` 0.5.0](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0),
+whose scoring assertions are ported into the R test suite. They should agree
+score-for-score. 
 
 The Shiny application has not been ported yet.
 

@@ -4,7 +4,7 @@
 
 **STRprofilerR** is a port to an R package of the [strprofiler Python package](https://github.com/j-andrews7/STRprofiler).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.99.0 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.99.1 (dev) | **License**: MIT
 
 ## Repository Structure
 
@@ -31,8 +31,12 @@ Alleles are stored **pre-split**: each column of the `alleles` slot is a
 `@details` of `scoreProfiles`), not a loop over pairs -- if you change scoring,
 the naive cross-check in `tests/testthat/test-scoring.R` is what guards it.
 
-Deliberate divergences from the Python package are enumerated in `NEWS.md`.
-Keep that list current when behaviour changes.
+Deliberate divergences from the Python package are enumerated in `NEWS.md`,
+checked against [strprofiler 0.5.0](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0).
+Keep that list current when behaviour changes on either side -- an upstream
+release can close a divergence or open a new one, and the same claims are
+repeated in `README.md`, the `@details` of the affected functions, and a few
+test comments.
 
 The Shiny application has **not** been ported; `strprofiler app` says so. It should also cite the [publication](https://pubmed.ncbi.nlm.nih.gov/39589865/) appropriately.
 

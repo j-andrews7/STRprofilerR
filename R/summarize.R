@@ -15,9 +15,10 @@
 #' ## Divergences from the Python package
 #'
 #' `strprofiler` reads the top two hits positionally out of a table whose first
-#' row is the query itself, and raises an `IndexError` when a query has fewer
-#' than two comparisons. Here a query with no comparisons gets `NA` for both,
-#' and one with a single comparison gets `NA` for `nextBest`.
+#' row is the query itself, reporting an empty string when a query has fewer than
+#' two comparisons (through 0.4.2 it raised an `IndexError`). Here a query with no
+#' comparisons gets `NA` for both, and one with a single comparison gets `NA` for
+#' `nextBest`.
 #'
 #' `strprofiler` orders all three match columns by Tanabe score, so the Masters
 #' columns come out in an order unrelated to their own values. Each column is

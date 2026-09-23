@@ -180,6 +180,7 @@ scoreProfiles <- function(query,
 #' @param sample Name to label the query with.
 #' @param pentaFix Logical scalar. Harmonise Penta marker spellings in `x`.
 #' @inheritParams scoreProfiles
+#' @inheritParams readSTRProfiles
 #'
 #' @return A [S4Vectors::DataFrame] as returned by [scoreProfiles()].
 #'
@@ -204,7 +205,8 @@ scoreQuery <- function(x,
                        sample = "Query",
                        useAmel = FALSE,
                        excludeMarkers = NULL,
-                       pentaFix = TRUE) {
+                       pentaFix = TRUE,
+                       keepCalls = c("X", "Y")) {
     x <- as.list(x)
     if (is.null(names(x)) || !all(nzchar(names(x)))) {
         stop("'x' must be fully named, with one name per marker.", call. = FALSE)
@@ -217,7 +219,7 @@ scoreQuery <- function(x,
     )
 
     scoreProfiles(
-        STRProfiles(df, pentaFix = pentaFix),
+        STRProfiles(df, pentaFix = pentaFix, keepCalls = keepCalls),
         reference,
         useAmel = useAmel,
         excludeMarkers = excludeMarkers

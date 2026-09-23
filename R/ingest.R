@@ -4,19 +4,38 @@
 #' de-duplicating and ordering them consistently.
 #'
 #' @details
-#' Each element is split on commas and each token trimmed. Tokens that parse as
-#' numbers are de-duplicated numerically, sorted ascending, and rendered without
-#' a trailing `.0`, so `"10.0"` and `"10"` collapse to a single `"10"` while
-#' `"9.3"` is preserved. Tokens that do not parse as numbers (such as the `X`
-#' and `Y` of amelogenin) are de-duplicated, sorted, and placed after the
-#' numeric ones.
+#' Each element is split on commas and each token trimmed. A token survives only
+#' if it is an allele:
 #'
-#' Empty tokens are dropped. This is a deliberate divergence from the
-#' `strprofiler` Python package, where a trailing comma (`"12,"`) survives
-#' cleaning and is later counted as a second, empty allele.
+#' * a finite repeat count, de-duplicated numerically, sorted ascending, and
+#'   rendered without a trailing `.0`, so `"10.0"` and `"10"` collapse to a
+#'   single `"10"` while `"9.3"` is preserved; or
+#' * one of the calls named in `keepCalls`, matched case-insensitively and stored
+#'   in the spelling given there, so `"x"` and `"X"` are one allele rather than
+#'   two that never match. These sort after the numeric alleles.
+#'
+#' Everything else is discarded: the empty token left by a trailing comma
+#' (`"12,"`), the codes a capillary-electrophoresis export uses for a peak it
+#' could not call (`OL` for one outside the ladder, `?` for one it declined to
+#' type, `NR`, `ND` and the like), and free text. None of them is an allele, and
+#' keeping them makes two profiles that merely failed at the same marker score as
+#' sharing a value; discarding them leaves the marker untyped, which lowers the
+#' shared-marker count instead. `"nan"` and `"inf"` go the same way, though
+#' `as.numeric()` accepts both.
+#'
+#' `keepCalls` defaults to the amelogenin sex markers, the only allele calls that
+#' are not repeat counts. [readSTRProfiles()] and [STRProfiles()] are stricter
+#' still and honour `keepCalls` at amelogenin markers only, since a letter at any
+#' other marker is a failed call rather than a sex call. `strprofiler` 0.5.0 keeps
+#' `X`/`Y` at every marker; through 0.4.2 it scored every one of these codes as an
+#' ordinary allele.
 #'
 #' @param x Character vector of comma-separated allele calls. `NA` is treated as
 #'   an empty call.
+#' @param keepCalls Character vector of non-numeric calls that count as alleles,
+#'   compared case-insensitively against each whole token and stored in the
+#'   spelling given here. Exports are not consistent about capitalisation. Pass
+#'   `character(0)` to accept repeat counts only.
 #'
 #' @return A [IRanges::CharacterList] the same length as `x`, each element the
 #'   cleaned allele vector for the corresponding input.
@@ -26,18 +45,34 @@
 #' @examples
 #' cleanAlleles("10.0,10,13,13.0,14,14 ")
 #'
-#' # Non-numeric alleles sort after numeric ones.
+#' # The sex markers are kept, in one spelling, and sort after numeric alleles.
 #' cleanAlleles(c("Y,X", "17.3, 12", "", NA))
+#' cleanAlleles("x,X,y")
+#'
+#' # Uncallable peaks and free text are discarded, leaving a marker untyped.
+#' cleanAlleles("OL,11")
+#' cleanAlleles(c("OL", "12,NR,ND"))
+#'
+#' # Repeat counts only.
+#' cleanAlleles("12,X", keepCalls = character(0))
 #'
 #' @export
-cleanAlleles <- function(x) {
+cleanAlleles <- function(x, keepCalls = c("X", "Y")) {
+    .cleanAllelesCounted(x, keepCalls)$alleles
+}
+
+# The working half of cleanAlleles(), which also reports how many uncallable
+# calls were discarded from each element. The count is what lets .buildProfiles()
+# record an 'nDroppedCalls' column without a second pass over the alleles, and it
+# is free here because the tokens are already flattened.
+.cleanAllelesCounted <- function(x, keepCalls = c("X", "Y")) {
     x <- as.character(x)
     x[is.na(x)] <- ""
 
     toks <- strsplit(x, ",", fixed = TRUE)
     n <- length(toks)
     if (n == 0L) {
-        return(IRanges::CharacterList(list()))
+        return(list(alleles = IRanges::CharacterList(list()), nDropped = integer(0)))
     }
 
     # Work on every token from every element at once, tagged by which element it
@@ -46,17 +81,33 @@ cleanAlleles <- function(x) {
     group <- rep.int(seq_len(n), lengths(toks))
     flat <- trimws(unlist(toks, use.names = FALSE))
 
-    keep <- nzchar(flat)
-    flat <- flat[keep]
-    group <- group[keep]
-
+    # An allele is a finite repeat count, or one of the calls 'keepCalls' permits.
+    # is.finite() rather than !is.na(), so the "nan" and "inf" that as.numeric()
+    # accepts are treated as the junk they are.
     num <- suppressWarnings(as.numeric(flat))
-    isNum <- !is.na(num)
+    isNum <- is.finite(num)
+    permitted <- match(toupper(flat), toupper(keepCalls))
+    isCall <- !isNum & !is.na(permitted)
 
-    # Canonical spelling: numeric tokens normalised so "10.0" and "10" collapse,
-    # everything else left as typed.
-    canonical <- flat
+    # Whatever is left is a peak the instrument could not call, or free text.
+    # Counted per element before it is discarded, so the caller can report what
+    # was removed rather than leaving it to be inferred from a marker count. An
+    # empty token is not a call, so it is dropped without being counted.
+    nDropped <- tabulate(group[nzchar(flat) & !isNum & !isCall], nbins = n)
+
+    # Canonical spelling: numbers normalised so "10.0" and "10" collapse, kept
+    # calls taken from 'keepCalls' so "x" and "X" are one allele. Scoring compares
+    # these strings literally, so a spelling left un-normalised here is not a near
+    # miss, it is a silent non-match.
+    canonical <- character(length(flat))
     canonical[isNum] <- .formatAllele(num[isNum])
+    canonical[isCall] <- keepCalls[permitted[isCall]]
+
+    keep <- isNum | isCall
+    group <- group[keep]
+    canonical <- canonical[keep]
+    num <- num[keep]
+    isNum <- isNum[keep]
 
     # Within an element: numeric alleles ascending, then string alleles sorted.
     ord <- order(
@@ -75,8 +126,11 @@ cleanAlleles <- function(x) {
         canonical <- canonical[!dup]
     }
 
-    IRanges::CharacterList(
-        unname(split(canonical, factor(group, levels = seq_len(n))))
+    list(
+        alleles = IRanges::CharacterList(
+            unname(split(canonical, factor(group, levels = seq_len(n))))
+        ),
+        nDropped = nDropped
     )
 }
 
@@ -127,16 +181,19 @@ cleanAlleles <- function(x) {
 #'
 #' ## Divergences from the Python package
 #'
-#' `metadataCols` are held in [sampleData()] rather than being treated as
-#' markers. In `strprofiler` these columns flow into the scoring routine, so two
-#' samples sharing a `Center` of `"JAX"` score as sharing a marker.
+#' `metadataCols` are held in [sampleData()] rather than alongside the markers.
+#' `strprofiler` 0.5.0 carries them in the profile and skips them at scoring and
+#' mixing time, so a custom metadata column has to be declared to each of those
+#' functions rather than once at ingest. (Through 0.4.2 it had no such argument,
+#' and two samples sharing a `Center` of `"JAX"` scored as sharing a marker.)
 #'
 #' Row order follows the input files. `strprofiler` returns wide-format samples
 #' in sorted order because it groups with `pandas`.
 #'
 #' All columns are read as text, so alleles are never coerced to numbers and
-#' back. This removes a class of bug that `strprofiler` patched twice (alleles
-#' ending in zero being truncated, for example `10` becoming `1`).
+#' back. This removes a class of bug that `strprofiler` patched twice through
+#' 0.4.2 (alleles ending in zero being truncated, for example `10` becoming `1`);
+#' 0.5.0 instead parses every call and renders it back.
 #'
 #' @param files Character vector of paths. Supported extensions are `csv`,
 #'   `tsv`, `txt` (tab-separated), and `xlsx` (first sheet; needs `readxl`).
@@ -154,6 +211,11 @@ cleanAlleles <- function(x) {
 #' @param format One of `"auto"`, `"wide"`, or `"long"`. Applied to every file.
 #' @param extraAliases Named character vector of additional marker aliases,
 #'   passed to [harmonizeMarkers()].
+#' @param keepCalls Character vector of non-numeric calls that count as alleles,
+#'   passed to [cleanAlleles()] and honoured at amelogenin markers only. Defaults
+#'   to the sex markers `X` and `Y`. Every other non-numeric call is an uncallable
+#'   peak or free text, and the per-sample count discarded is recorded in
+#'   [sampleData()] as `nDroppedCalls`.
 #'
 #' @return A [STRProfiles] object.
 #'
@@ -191,7 +253,8 @@ readSTRProfiles <- function(files,
                             pentaFix = TRUE,
                             metadataCols = c("Center", "Passage"),
                             format = c("auto", "wide", "long"),
-                            extraAliases = NULL) {
+                            extraAliases = NULL,
+                            keepCalls = c("X", "Y")) {
     format <- match.arg(format)
     files <- as.character(files)
     if (length(files) == 0L) {
@@ -214,7 +277,8 @@ readSTRProfiles <- function(files,
             pentaFix = pentaFix,
             extraAliases = extraAliases,
             file = path,
-            format = fmt
+            format = fmt,
+            keepCalls = keepCalls
         )
     })
 
@@ -242,6 +306,7 @@ readSTRProfiles <- function(files,
             pentaFix = pentaFix,
             metadataCols = metadataCols,
             format = format,
+            keepCalls = keepCalls,
             sampleMap = if (is.character(sampleMap)) sampleMap else !is.null(sampleMap)
         ),
         timestamp = Sys.time(),
@@ -288,7 +353,8 @@ STRProfiles <- function(x,
                         sampleCol = "Sample",
                         pentaFix = TRUE,
                         metadataCols = c("Center", "Passage"),
-                        extraAliases = NULL) {
+                        extraAliases = NULL,
+                        keepCalls = c("X", "Y")) {
     x <- as.data.frame(x, check.names = FALSE, stringsAsFactors = FALSE)
     names(x) <- trimws(names(x))
     x[] <- lapply(x, function(z) {
@@ -306,7 +372,8 @@ STRProfiles <- function(x,
         pentaFix = pentaFix,
         extraAliases = extraAliases,
         file = character(0),
-        format = "long"
+        format = "long",
+        keepCalls = keepCalls
     )
 
     validObject(out)
@@ -512,7 +579,7 @@ writeSTRProfiles <- function(x, file, sampleCol = "Sample") {
 }
 
 .buildProfiles <- function(samples, markerTable, metaTable, pentaFix, extraAliases,
-                           file, format) {
+                           file, format, keepCalls = c("X", "Y")) {
     samples <- trimws(as.character(samples))
 
     if (anyDuplicated(samples)) {
@@ -559,8 +626,20 @@ writeSTRProfiles <- function(x, file, sampleCol = "Sample") {
     }
 
     al <- S4Vectors::DataFrame(row.names = samples)
+    nDropped <- integer(length(samples))
+
+    # Amelogenin is the one marker reported as a letter. Everywhere else a repeat
+    # count is the only kind of allele there is, so 'keepCalls' does not apply and
+    # an "X" is a failed call like any other.
+    isAmel <- classifyMarkers(mk) == "amelogenin"
+
     for (i in seq_along(mk)) {
-        al[[mk[[i]]]] <- cleanAlleles(markerTable[[i]])
+        cleaned <- .cleanAllelesCounted(
+            markerTable[[i]],
+            if (isAmel[[i]]) keepCalls else character(0)
+        )
+        al[[mk[[i]]]] <- cleaned$alleles
+        nDropped <- nDropped + cleaned$nDropped
     }
 
     sd <- if (ncol(metaTable) == 0L) {
@@ -569,13 +648,18 @@ writeSTRProfiles <- function(x, file, sampleCol = "Sample") {
         S4Vectors::DataFrame(metaTable, row.names = samples, check.names = FALSE)
     }
 
+    # How many uncallable peaks were discarded, per sample. Recorded rather than
+    # left implicit: a profile that lost calls has a lower shared-marker count
+    # than its panel would suggest, and that is worth being able to see.
+    sd$nDroppedCalls <- nDropped
+
     new("STRProfiles",
         alleles = al,
         markerData = .syncMarkerData(al, NULL),
         sampleData = sd,
         provenance = list(
             files = file,
-            options = list(pentaFix = pentaFix, format = format),
+            options = list(pentaFix = pentaFix, format = format, keepCalls = keepCalls),
             timestamp = Sys.time(),
             version = .pkgVersion()
         )

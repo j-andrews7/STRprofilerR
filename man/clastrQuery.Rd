@@ -64,9 +64,9 @@ This function needs network access, and \strong{is for research use only}.
 \subsection{Divergences from the Python package}{
 
 The response is parsed directly from the nested JSON rather than through a
-flatten-and-pivot chain over generated column names. \code{strprofiler} also sends
-\code{algorithm = 2} for Masters (reference) in batch mode, which silently runs a
-Masters (query) search; \code{algorithm = 3} is sent here.
+flatten-and-pivot chain over generated column names. \code{algorithm = 3} is sent
+for Masters (reference) in batch mode, as \code{strprofiler} does from 0.5.0;
+through 0.4.2 it sent \code{2}, which silently runs a Masters (query) search.
 }
 }
 \examples{

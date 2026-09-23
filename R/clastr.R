@@ -82,9 +82,9 @@ validateClastrMarkers <- function(markers) {
 #' ## Divergences from the Python package
 #'
 #' The response is parsed directly from the nested JSON rather than through a
-#' flatten-and-pivot chain over generated column names. `strprofiler` also sends
-#' `algorithm = 2` for Masters (reference) in batch mode, which silently runs a
-#' Masters (query) search; `algorithm = 3` is sent here.
+#' flatten-and-pivot chain over generated column names. `algorithm = 3` is sent
+#' for Masters (reference) in batch mode, as `strprofiler` does from 0.5.0;
+#' through 0.4.2 it sent `2`, which silently runs a Masters (query) search.
 #'
 #' @param x A [STRProfiles] object, or a named character vector giving one
 #'   profile's markers and comma-separated alleles.

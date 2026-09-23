@@ -92,7 +92,62 @@ test_that("Center and Passage are metadata, not markers", {
     p <- readSTRProfiles(ed("main_database.csv"))
 
     expect_false(any(c("Center", "Passage") %in% markers(p)))
-    expect_identical(colnames(sampleData(p)), c("Center", "Passage"))
+    expect_identical(colnames(sampleData(p)), c("Center", "Passage", "nDroppedCalls"))
+})
+
+test_that("uncallable calls are dropped at ingest and counted per sample", {
+    p <- readSTRProfiles(ed("main_database.csv"))
+
+    # The stock database carries 22 calls that are not alleles, one per sample:
+    # 20 "OL" spread over five markers, a stray backtick in D21S11, and a
+    # "20 33.2" in FGA where the comma between two alleles is missing.
+    expect_identical(sum(sampleData(p)$nDroppedCalls), 22L)
+    expect_identical(sum(sampleData(p)$nDroppedCalls > 0L), 22L)
+
+    # Dropping leaves the remaining allele, not an empty string.
+    i <- match("684819", rownames(p))
+    expect_identical(alleles(p)[["D7S820"]][[i]], "11")
+})
+
+test_that("keepCalls applies to amelogenin only", {
+    df <- data.frame(
+        Sample = "S1", AMEL = "x,y", vWA = "16,X", TPOX = "8,9",
+        stringsAsFactors = FALSE
+    )
+    p <- STRProfiles(df)
+
+    # A letter is a sex call at amelogenin and a failed call anywhere else.
+    expect_identical(alleles(p)[["AMEL"]][[1L]], c("X", "Y"))
+    expect_identical(alleles(p)[["vWA"]][[1L]], "16")
+    expect_identical(sampleData(p)$nDroppedCalls, 1L)
+
+    # Every spelling classifyMarkers() knows is treated the same way.
+    amel <- STRProfiles(data.frame(Sample = "S1", Amelogenin = "X", stringsAsFactors = FALSE))
+    expect_identical(alleles(amel)[["Amelogenin"]][[1L]], "X")
+})
+
+test_that("keepCalls = character(0) drops the sex calls too", {
+    df <- data.frame(Sample = "S1", AMEL = "X,Y", TPOX = "8,9", stringsAsFactors = FALSE)
+    p <- STRProfiles(df, keepCalls = character(0))
+
+    expect_identical(alleles(p)[["AMEL"]][[1L]], character(0))
+    expect_identical(sampleData(p)$nDroppedCalls, 2L)
+})
+
+test_that("a marker whose only call is uncallable becomes untyped", {
+    df <- data.frame(Sample = "S1", vWA = "OL", TPOX = "8,9", stringsAsFactors = FALSE)
+    p <- STRProfiles(df)
+
+    expect_identical(alleles(p)[["vWA"]][[1L]], character(0))
+    expect_identical(markerData(p)["vWA", "nTyped"], 0L)
+    expect_identical(sampleData(p)$nDroppedCalls, 1L)
+})
+
+test_that("reserved annotations do not round-trip as markers", {
+    p <- readSTRProfiles(ed("main_database.csv"))
+
+    expect_false("nDroppedCalls" %in% names(as.data.frame(p)))
+    expect_false("nDroppedCalls" %in% markers(STRProfiles(as.data.frame(p))))
 })
 
 test_that("a lone comma is read as an untyped marker", {

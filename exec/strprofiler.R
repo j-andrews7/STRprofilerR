@@ -18,6 +18,16 @@
 
 suppressPackageStartupMessages(library(STRprofilerR))
 
+# --keep_calls arrives as one comma-separated string. An empty string means
+# repeat counts only, which is character(0) rather than "".
+.splitKeepCalls <- function(x) {
+    if (is.na(x)) {
+        return(character(0))
+    }
+    out <- trimws(strsplit(as.character(x), ",", fixed = TRUE)[[1L]])
+    out[nzchar(out)]
+}
+
 switch(
     command <- "",
 
@@ -69,6 +79,11 @@ switch(
         #| description: Harmonise the PentaC/D/E marker spellings.
         penta_fix <- TRUE
 
+        #| description: |
+        #|   Comma-separated non-numeric calls that count as alleles, honoured at
+        #|   amelogenin markers only. Pass an empty string for repeat counts only.
+        keep_calls <- "X,Y"
+
         #| description: Include amelogenin in similarity scoring.
         score_amel <- FALSE
 
@@ -87,6 +102,7 @@ switch(
 
         metaCols <- if (length(metadata_col)) metadata_col else c("Center", "Passage")
         outFormats <- if (length(format)) format else c("csv", "html")
+        keepCalls <- .splitKeepCalls(keep_calls)
 
         query <- readSTRProfiles(
             input_files...,
@@ -94,7 +110,8 @@ switch(
             markerCol = marker_col,
             sampleMap = if (is.na(sample_map)) NULL else sample_map,
             pentaFix = penta_fix,
-            metadataCols = metaCols
+            metadataCols = metaCols,
+            keepCalls = keepCalls
         )
 
         # Assigned from an if/else rather than a bare NULL: Rapp reads a
@@ -107,7 +124,8 @@ switch(
                 sampleCol = sample_col,
                 markerCol = marker_col,
                 pentaFix = penta_fix,
-                metadataCols = metaCols
+                metadataCols = metaCols,
+                keepCalls = keepCalls
             )
         }
 
@@ -190,6 +208,11 @@ switch(
         #| description: Harmonise the PentaC/D/E marker spellings.
         penta_fix <- TRUE
 
+        #| description: |
+        #|   Comma-separated non-numeric calls sent to CLASTR as alleles, honoured
+        #|   at amelogenin markers only. Pass an empty string to send none.
+        keep_calls <- "X,Y"
+
         #| description: Directory to write results into.
         #| short: o
         output_dir <- "./STRprofiler"
@@ -211,7 +234,8 @@ switch(
             sampleCol = sample_col,
             markerCol = marker_col,
             sampleMap = if (is.na(sample_map)) NULL else sample_map,
-            pentaFix = penta_fix
+            pentaFix = penta_fix,
+            keepCalls = .splitKeepCalls(keep_calls)
         )
 
         dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)

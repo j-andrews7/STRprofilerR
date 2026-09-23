@@ -42,6 +42,16 @@ test_that("scores match the Python reference, amelogenin included", {
     expect_identical(sprintf("%.2f", s$mastersRefScore), "85.71")
 })
 
+test_that("amelogenin calls match whatever case they were typed in", {
+    q <- STRProfiles(data.frame(Sample = "q", AMEL = "x,y", m = "12", stringsAsFactors = FALSE))
+    r <- STRProfiles(data.frame(Sample = "r", AMEL = "X,Y", m = "12", stringsAsFactors = FALSE))
+
+    s <- scoreProfiles(q, r, useAmel = TRUE)
+
+    expect_identical(s$nSharedAlleles, 3L)
+    expect_identical(s$tanabeScore, 100)
+})
+
 test_that("untyped markers are excluded from both numerator and denominator", {
     # mark2 is empty in the query, so the reference's lone mark2 allele must not
     # inflate nReferenceAlleles.
@@ -163,4 +173,35 @@ test_that("an empty query or reference gives an empty result, not an error", {
     expect_identical(nrow(scoreProfiles(empty, p)), 0L)
     expect_identical(nrow(scoreProfiles(p, empty)), 0L)
     expect_identical(colnames(scoreProfiles(empty, p)), colnames(scoreProfiles(p)))
+})
+
+test_that("an uncallable marker lowers the shared-marker count, not the score", {
+    q <- STRProfiles(data.frame(
+        Sample = "Q", vWA = "OL", TPOX = "8,9", TH01 = "6,7",
+        stringsAsFactors = FALSE
+    ))
+    r <- STRProfiles(data.frame(
+        Sample = "R", vWA = "OL", TPOX = "8,9", TH01 = "6,7",
+        stringsAsFactors = FALSE
+    ))
+
+    s <- as.data.frame(scoreProfiles(q, r))
+    expect_identical(s$nSharedMarkers, 2L)
+    expect_equal(s$tanabeScore, 100)
+})
+
+test_that("an uncallable call never contributes to a score", {
+    # strprofiler 0.5.0's test_scoring_discards_non_numeric_alleles, over the
+    # codes an export might carry.
+    for (junk in c("OL", "?", "NR", "ND", "NA", "-", "n/a", "nan", "inf")) {
+        q <- STRProfiles(data.frame(Sample = "Q", m1 = paste0("12,", junk),
+                                    stringsAsFactors = FALSE))
+        r <- STRProfiles(data.frame(Sample = "R", m1 = "12", stringsAsFactors = FALSE))
+        s <- as.data.frame(scoreProfiles(q, r))
+
+        expect_identical(s$nQueryAlleles, 1L, info = junk)
+        expect_identical(s$nReferenceAlleles, 1L, info = junk)
+        expect_identical(s$nSharedAlleles, 1L, info = junk)
+        expect_equal(s$tanabeScore, 100, info = junk)
+    }
 })

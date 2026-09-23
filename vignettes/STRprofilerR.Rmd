@@ -37,7 +37,7 @@ library(STRprofilerR)
 
 # Reading profiles
 
-STR files come in two shapes, and `readSTRProfiles()` reads both. A **long**
+STR files typically come in one of two shapes (at least from our facility/platform), and `readSTRProfiles()` reads both. A **long**
 file has one row per sample and one column per marker:
 
 ```{r read-long}
@@ -52,13 +52,12 @@ profiles
 
 A **wide** file has one row per sample/marker pair, with the alleles spread
 across numbered columns. Columns whose names contain `Allele` are collected;
-size and height columns are ignored. Point `markerCol` at the marker column and
+size and height columns are ignored. Point `markerCol` at the column containing marker names and
 the layout is detected automatically.
 
 Files of either shape, and of any supported format, can be read together. The
 marker set is the union across files, and samples missing a marker are recorded
-as untyped rather than as having no alleles — a distinction that matters,
-because untyped markers are skipped during scoring rather than counted as
+as untyped rather than as having no alleles. Untyped markers are skipped during scoring rather than counted as
 mismatches.
 
 ```{r read-both}
@@ -107,10 +106,10 @@ without you having to name the column:
 markerData(profiles)
 ```
 
-## Metadata, not markers
+## Metadata
 
 Database files often carry non-marker columns. Name them in `metadataCols` and
-they land in `sampleData()`, safely out of the scoring:
+they fall in `sampleData()`, ignored for scoring purposes:
 
 ```{r metadata}
 dbFile <- system.file("extdata", "main_database.csv", package = "STRprofilerR")
@@ -120,9 +119,7 @@ dim(reference)
 head(sampleData(reference), 3)
 ```
 
-This is worth being careful about. If `Center` were treated as a marker, two
-samples from the same institution would score as sharing a marker they never
-had.
+If using an existing database with extra sample metadata, be sure to set this so those columns aren't used in scoring.
 
 # Scoring
 
@@ -139,8 +136,7 @@ $$\textrm{Tanabe} = 100 \times \frac{2s}{q + r}
 Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the two profiles
 and the score is unchanged. The Masters scores are not, and the asymmetry is the
 point. Masters (query) asks how much of the query the reference accounts for,
-which is the question when a query may be a contaminated or drifted derivative
-of a known line — a query containing everything the reference has *plus* extra
+which is useful when a query may be a contaminated. A query containing everything the reference has *plus* extra
 alleles scores 100 on Masters (reference) while Tanabe drops.
 
 Amelogenin is a sex marker rather than a polymorphic STR, so it is left out
@@ -157,8 +153,7 @@ scoreProfiles(queries, refs)
 ```
 
 Scoring is vectorised as a handful of sparse matrix products rather than a loop
-over pairs, so comparing a batch against a database of thousands is
-comfortable. `chunkSize` controls how many queries are held in memory at once,
+over pairs, so comparing a batch against a database of thousands is very quick. `chunkSize` controls how many queries are held in memory at once,
 and `minScore` discards weak pairs as they are produced:
 
 ```{r score-filter}
@@ -167,7 +162,7 @@ scoreProfiles(queries, refs, minScore = 90)
 
 # Comparing end to end
 
-`compareProfiles()` does the whole job: score, flag mixing, summarise.
+`compareProfiles()` runs scoring, flags mixing, and summarises.
 
 ```{r compare}
 cmp <- compareProfiles(queries, refs)
@@ -190,10 +185,11 @@ compareProfiles(refs)
 
 ## Mixing
 
-A diploid genome gives at most two alleles per autosomal marker. Consistently
-seeing three or more suggests more than one genome in the tube.
-`flagMixedSamples()` counts markers with **more than two** alleles and flags a
-sample when that count **exceeds** `threeAlleleThreshold`:
+A diploid genome gives at most two alleles per autosomal marker. While models can get pretty messed up and may occasionally harbor a third allele, consistently
+seeing three or more in many markers suggests more than one genome in the tube.
+
+To help identify such cases, STRprofilerR's `flagMixedSamples()` counts markers with **more than two** alleles and flags a
+sample when that count **exceeds** `threeAlleleThreshold` (2, by default).
 
 ```{r mixing}
 batch <- readSTRProfiles(
@@ -203,8 +199,7 @@ batch <- readSTRProfiles(
 flagMixedSamples(batch)
 ```
 
-Treat it as a screen. A flagged sample is worth a look at its
-electropherogram; an unflagged one is not evidence of purity.
+It is worth checking flagged samples more closely.
 
 # Writing results
 
@@ -248,8 +243,7 @@ hits <- clastrQuery(profile, scoreFilter = 90)
 as.data.frame(hits)[, c("accession", "name", "score", "problem")]
 ```
 
-A cell line with a known contamination history carries a note in `problem` —
-often the most useful column in the result. A result that CLASTR returns as two
+A cell line with a known contamination history carries a note in `problem`. A result that CLASTR returns as two
 profiles appears as two rows, with `(Best)` and `(Worst)` appended to the
 accession.
 

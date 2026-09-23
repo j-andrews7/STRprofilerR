@@ -3,6 +3,13 @@
 #' @importFrom S4Vectors elementNROWS unstrsplit
 NULL
 
+# Sample annotations the package computes at ingest rather than reading from the
+# input. They live in sampleData() because they are per-sample facts, but
+# as.data.frame() leaves them out: every column it emits is read back as a marker
+# unless it is named in 'metadataCols', so echoing them would quietly turn a QC
+# statistic into a marker on the next round-trip.
+.RESERVED_SAMPLE_COLS <- "nDroppedCalls"
+
 # Build an all-empty CharacterList of length n.
 .emptyCharacterList <- function(n) {
     IRanges::CharacterList(rep(list(character(0)), n))

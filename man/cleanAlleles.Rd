@@ -4,11 +4,16 @@
 \alias{cleanAlleles}
 \title{Clean and split a vector of allele calls}
 \usage{
-cleanAlleles(x)
+cleanAlleles(x, keepCalls = c("X", "Y"))
 }
 \arguments{
 \item{x}{Character vector of comma-separated allele calls. \code{NA} is treated as
 an empty call.}
+
+\item{keepCalls}{Character vector of non-numeric calls that count as alleles,
+compared case-insensitively against each whole token and stored in the
+spelling given here. Exports are not consistent about capitalisation. Pass
+\code{character(0)} to accept repeat counts only.}
 }
 \value{
 A \link[IRanges:CharacterList]{IRanges::CharacterList} the same length as \code{x}, each element the
@@ -19,22 +24,46 @@ Splits comma-separated allele strings into their component alleles,
 de-duplicating and ordering them consistently.
 }
 \details{
-Each element is split on commas and each token trimmed. Tokens that parse as
-numbers are de-duplicated numerically, sorted ascending, and rendered without
-a trailing \code{.0}, so \code{"10.0"} and \code{"10"} collapse to a single \code{"10"} while
-\code{"9.3"} is preserved. Tokens that do not parse as numbers (such as the \code{X}
-and \code{Y} of amelogenin) are de-duplicated, sorted, and placed after the
-numeric ones.
+Each element is split on commas and each token trimmed. A token survives only
+if it is an allele:
+\itemize{
+\item a finite repeat count, de-duplicated numerically, sorted ascending, and
+rendered without a trailing \code{.0}, so \code{"10.0"} and \code{"10"} collapse to a
+single \code{"10"} while \code{"9.3"} is preserved; or
+\item one of the calls named in \code{keepCalls}, matched case-insensitively and stored
+in the spelling given there, so \code{"x"} and \code{"X"} are one allele rather than
+two that never match. These sort after the numeric alleles.
+}
 
-Empty tokens are dropped. This is a deliberate divergence from the
-\code{strprofiler} Python package, where a trailing comma (\code{"12,"}) survives
-cleaning and is later counted as a second, empty allele.
+Everything else is discarded: the empty token left by a trailing comma
+(\code{"12,"}), the codes a capillary-electrophoresis export uses for a peak it
+could not call (\code{OL} for one outside the ladder, \verb{?} for one it declined to
+type, \code{NR}, \code{ND} and the like), and free text. None of them is an allele, and
+keeping them makes two profiles that merely failed at the same marker score as
+sharing a value; discarding them leaves the marker untyped, which lowers the
+shared-marker count instead. \code{"nan"} and \code{"inf"} go the same way, though
+\code{as.numeric()} accepts both.
+
+\code{keepCalls} defaults to the amelogenin sex markers, the only allele calls that
+are not repeat counts. \code{\link[=readSTRProfiles]{readSTRProfiles()}} and \code{\link[=STRProfiles]{STRProfiles()}} are stricter
+still and honour \code{keepCalls} at amelogenin markers only, since a letter at any
+other marker is a failed call rather than a sex call. \code{strprofiler} 0.5.0 keeps
+\code{X}/\code{Y} at every marker; through 0.4.2 it scored every one of these codes as an
+ordinary allele.
 }
 \examples{
 cleanAlleles("10.0,10,13,13.0,14,14 ")
 
-# Non-numeric alleles sort after numeric ones.
+# The sex markers are kept, in one spelling, and sort after numeric alleles.
 cleanAlleles(c("Y,X", "17.3, 12", "", NA))
+cleanAlleles("x,X,y")
+
+# Uncallable peaks and free text are discarded, leaving a marker untyped.
+cleanAlleles("OL,11")
+cleanAlleles(c("OL", "12,NR,ND"))
+
+# Repeat counts only.
+cleanAlleles("12,X", keepCalls = character(0))
 
 }
 \author{

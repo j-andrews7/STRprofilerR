@@ -55,9 +55,10 @@ the summary reflects only the pairs that survived.
 \subsection{Divergences from the Python package}{
 
 \code{strprofiler} reads the top two hits positionally out of a table whose first
-row is the query itself, and raises an \code{IndexError} when a query has fewer
-than two comparisons. Here a query with no comparisons gets \code{NA} for both,
-and one with a single comparison gets \code{NA} for \code{nextBest}.
+row is the query itself, reporting an empty string when a query has fewer than
+two comparisons (through 0.4.2 it raised an \code{IndexError}). Here a query with no
+comparisons gets \code{NA} for both, and one with a single comparison gets \code{NA} for
+\code{nextBest}.
 
 \code{strprofiler} orders all three match columns by Tanabe score, so the Masters
 columns come out in an order unrelated to their own values. Each column is

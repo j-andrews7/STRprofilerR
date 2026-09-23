@@ -9,7 +9,8 @@ STRProfiles(
   sampleCol = "Sample",
   pentaFix = TRUE,
   metadataCols = c("Center", "Passage"),
-  extraAliases = NULL
+  extraAliases = NULL,
+  keepCalls = c("X", "Y")
 )
 }
 \arguments{
@@ -26,6 +27,12 @@ via \code{\link[=markerAliases]{markerAliases()}}.}
 
 \item{extraAliases}{Named character vector of additional marker aliases,
 passed to \code{\link[=harmonizeMarkers]{harmonizeMarkers()}}.}
+
+\item{keepCalls}{Character vector of non-numeric calls that count as alleles,
+passed to \code{\link[=cleanAlleles]{cleanAlleles()}} and honoured at amelogenin markers only. Defaults
+to the sex markers \code{X} and \code{Y}. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+\code{\link[=sampleData]{sampleData()}} as \code{nDroppedCalls}.}
 }
 \value{
 A \link{STRProfiles} object.

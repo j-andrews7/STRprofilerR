@@ -34,7 +34,8 @@ test_that("match columns are ordered by their own score", {
 })
 
 test_that("a query with no comparisons summarises to NA rather than erroring", {
-    # Python's make_summary indexes positionally and raises IndexError here.
+    # Python's make_summary indexes positionally and reports "" here (and
+    # raised IndexError through strprofiler 0.4.2).
     p <- loadPair()
     cmp <- compareProfiles(p$query, p$reference, minScore = 99.9)
     s <- as.data.frame(summary(cmp))

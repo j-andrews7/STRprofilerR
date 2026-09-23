@@ -93,7 +93,10 @@ setMethod("provenance", "STRProfiles", function(x, ...) x@provenance)
 #'
 #' `as.data.frame()` flattens the object back to the wide layout
 #' [readSTRProfiles()] accepts, with alleles collapsed to comma-separated
-#' strings, so profiles round-trip through disk without loss.
+#' strings, so profiles round-trip through disk without loss. Annotations the
+#' package computes at ingest rather than reading from the input — currently
+#' `nDroppedCalls` — are left out, since every column emitted is read back as a
+#' marker and a QC statistic is not one.
 #'
 #' @param x A [STRProfiles] object.
 #' @param i Sample index: names, positions, or a logical vector.
@@ -209,8 +212,14 @@ setMethod(
         )
         names(out) <- sampleCol
 
-        if (ncol(x@sampleData) > 0L) {
-            out <- cbind(out, as.data.frame(x@sampleData), stringsAsFactors = FALSE)
+        # Reserved annotations are ingest statistics, not profile data, and
+        # anything emitted here is read back as a marker. See
+        # .RESERVED_SAMPLE_COLS.
+        sd <- x@sampleData[, setdiff(colnames(x@sampleData), .RESERVED_SAMPLE_COLS),
+            drop = FALSE
+        ]
+        if (ncol(sd) > 0L) {
+            out <- cbind(out, as.data.frame(sd), stringsAsFactors = FALSE)
         }
         if (length(flat) > 0L) {
             out <- cbind(out, as.data.frame(flat, check.names = FALSE, stringsAsFactors = FALSE))

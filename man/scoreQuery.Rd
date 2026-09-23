@@ -10,7 +10,8 @@ scoreQuery(
   sample = "Query",
   useAmel = FALSE,
   excludeMarkers = NULL,
-  pentaFix = TRUE
+  pentaFix = TRUE,
+  keepCalls = c("X", "Y")
 )
 }
 \arguments{
@@ -27,6 +28,12 @@ comma-separated allele calls.}
 out of scoring.}
 
 \item{pentaFix}{Logical scalar. Harmonise Penta marker spellings in \code{x}.}
+
+\item{keepCalls}{Character vector of non-numeric calls that count as alleles,
+passed to \code{\link[=cleanAlleles]{cleanAlleles()}} and honoured at amelogenin markers only. Defaults
+to the sex markers \code{X} and \code{Y}. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+\code{\link[=sampleData]{sampleData()}} as \code{nDroppedCalls}.}
 }
 \value{
 A \link[S4Vectors:DataFrame]{S4Vectors::DataFrame} as returned by \code{\link[=scoreProfiles]{scoreProfiles()}}.

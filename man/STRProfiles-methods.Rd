@@ -61,7 +61,10 @@ A \code{STRProfiles} object is samples-by-markers, so \code{dim()} reports
 
 \code{as.data.frame()} flattens the object back to the wide layout
 \code{\link[=readSTRProfiles]{readSTRProfiles()}} accepts, with alleles collapsed to comma-separated
-strings, so profiles round-trip through disk without loss.
+strings, so profiles round-trip through disk without loss. Annotations the
+package computes at ingest rather than reading from the input — currently
+\code{nDroppedCalls} — are left out, since every column emitted is read back as a
+marker and a QC statistic is not one.
 }
 \examples{
 f <- system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR")

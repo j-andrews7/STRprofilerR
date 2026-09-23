@@ -12,7 +12,8 @@ readSTRProfiles(
   pentaFix = TRUE,
   metadataCols = c("Center", "Passage"),
   format = c("auto", "wide", "long"),
-  extraAliases = NULL
+  extraAliases = NULL,
+  keepCalls = c("X", "Y")
 )
 }
 \arguments{
@@ -39,6 +40,12 @@ via \code{\link[=markerAliases]{markerAliases()}}.}
 
 \item{extraAliases}{Named character vector of additional marker aliases,
 passed to \code{\link[=harmonizeMarkers]{harmonizeMarkers()}}.}
+
+\item{keepCalls}{Character vector of non-numeric calls that count as alleles,
+passed to \code{\link[=cleanAlleles]{cleanAlleles()}} and honoured at amelogenin markers only. Defaults
+to the sex markers \code{X} and \code{Y}. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+\code{\link[=sampleData]{sampleData()}} as \code{nDroppedCalls}.}
 }
 \value{
 A \link{STRProfiles} object.
@@ -78,16 +85,19 @@ Sample names must be unique across all files.
 
 \subsection{Divergences from the Python package}{
 
-\code{metadataCols} are held in \code{\link[=sampleData]{sampleData()}} rather than being treated as
-markers. In \code{strprofiler} these columns flow into the scoring routine, so two
-samples sharing a \code{Center} of \code{"JAX"} score as sharing a marker.
+\code{metadataCols} are held in \code{\link[=sampleData]{sampleData()}} rather than alongside the markers.
+\code{strprofiler} 0.5.0 carries them in the profile and skips them at scoring and
+mixing time, so a custom metadata column has to be declared to each of those
+functions rather than once at ingest. (Through 0.4.2 it had no such argument,
+and two samples sharing a \code{Center} of \code{"JAX"} scored as sharing a marker.)
 
 Row order follows the input files. \code{strprofiler} returns wide-format samples
 in sorted order because it groups with \code{pandas}.
 
 All columns are read as text, so alleles are never coerced to numbers and
-back. This removes a class of bug that \code{strprofiler} patched twice (alleles
-ending in zero being truncated, for example \code{10} becoming \code{1}).
+back. This removes a class of bug that \code{strprofiler} patched twice through
+0.4.2 (alleles ending in zero being truncated, for example \code{10} becoming \code{1});
+0.5.0 instead parses every call and renders it back.
 }
 }
 \examples{

@@ -141,6 +141,7 @@ Jared Andrews
 ``` r
 long <- system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR")
 p <- readSTRProfiles(long, sampleCol = "Sample Name")
+#> Warning: NAs introduced by coercion
 p
 #> class: STRProfiles
 #> samples(2): SampleA SampleB
@@ -153,11 +154,19 @@ p
 markers(p)
 #> [1] "marker1" "marker2" "marker4" "PentaD"  "PentaE"  "AMEL"   
 markers(readSTRProfiles(long, sampleCol = "Sample Name", pentaFix = FALSE))
+#> Warning: NAs introduced by coercion
 #> [1] "marker1" "marker2" "marker4" "Penta D" "Penta E" "AMEL"   
 
 # A database file with Center and Passage metadata.
 db <- system.file("extdata", "main_database.csv", package = "STRprofilerR")
 ref <- readSTRProfiles(db)
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
+#> Warning: NAs introduced by coercion
 sampleData(ref)[1:3, ]
 #> DataFrame with 3 rows and 3 columns
 #>                 Center     Passage nDroppedCalls
@@ -172,5 +181,6 @@ xlsx <- system.file("extdata", "ExampleSTR.xlsx", package = "STRprofilerR")
 if (requireNamespace("readxl", quietly = TRUE)) {
     rownames(readSTRProfiles(xlsx, sampleCol = "Sample Name", sampleMap = smap))
 }
+#> Warning: NAs introduced by coercion
 #> [1] "Sample1"  "Sample33"
 ```

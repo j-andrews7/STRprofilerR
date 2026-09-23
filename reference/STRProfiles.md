@@ -80,6 +80,7 @@ df <- data.frame(
     check.names = FALSE
 )
 p <- STRProfiles(df)
+#> Warning: NAs introduced by coercion
 p
 #> class: STRProfiles
 #> samples(2): Line1 Line2
@@ -93,5 +94,6 @@ alleles(p)[["PentaD"]]
 
 # Round-trips through as.data.frame().
 identical(as.data.frame(STRProfiles(as.data.frame(p))), as.data.frame(p))
+#> Warning: NAs introduced by coercion
 #> [1] TRUE
 ```

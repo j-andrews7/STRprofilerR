@@ -77,26 +77,31 @@ cleanAlleles("10.0,10,13,13.0,14,14 ")
 
 # The sex markers are kept, in one spelling, and sort after numeric alleles.
 cleanAlleles(c("Y,X", "17.3, 12", "", NA))
+#> Warning: NAs introduced by coercion
 #> CharacterList of length 4
 #> [[1]] X Y
 #> [[2]] 12 17.3
 #> [[3]] character(0)
 #> [[4]] character(0)
 cleanAlleles("x,X,y")
+#> Warning: NAs introduced by coercion
 #> CharacterList of length 1
 #> [[1]] X Y
 
 # Uncallable peaks and free text are discarded, leaving a marker untyped.
 cleanAlleles("OL,11")
+#> Warning: NAs introduced by coercion
 #> CharacterList of length 1
 #> [[1]] 11
 cleanAlleles(c("OL", "12,NR,ND"))
+#> Warning: NAs introduced by coercion
 #> CharacterList of length 2
 #> [[1]] character(0)
 #> [[2]] 12
 
 # Repeat counts only.
 cleanAlleles("12,X", keepCalls = character(0))
+#> Warning: NAs introduced by coercion
 #> CharacterList of length 1
 #> [[1]] 12
 ```

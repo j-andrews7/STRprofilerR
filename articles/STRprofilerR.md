@@ -41,6 +41,8 @@ head(read.csv(longFile, check.names = FALSE))
 ``` r
 
 profiles <- readSTRProfiles(longFile, sampleCol = "Sample Name")
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 profiles
 #> class: STRProfiles
 #> samples(2): SampleA SampleB
@@ -69,6 +71,10 @@ if (requireNamespace("readxl", quietly = TRUE)) {
     both <- readSTRProfiles(c(longFile, xlsxFile), sampleCol = "Sample Name")
     print(both)
 }
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 #> class: STRProfiles
 #> samples(4): SampleA SampleB Sample1 Sample3
 #> markers(7): marker1 marker2 ... AMEL marker3
@@ -146,6 +152,20 @@ ignored for scoring purposes:
 
 dbFile <- system.file("extdata", "main_database.csv", package = "STRprofilerR")
 reference <- readSTRProfiles(dbFile)
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 
 dim(reference)
 #> [1] 1258   18
@@ -188,10 +208,14 @@ out unless you ask for it with `useAmel = TRUE`.
 ``` r
 
 queries <- readSTRProfiles(longFile, sampleCol = "Sample Name")
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 refs <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 
 scoreProfiles(queries, refs)
 #> DataFrame with 10 rows and 9 columns
@@ -294,13 +318,15 @@ than one genome in the tube.
 To help identify such cases, STRprofilerR’s
 [`flagMixedSamples()`](https://j-andrews7.github.io/STRprofilerR/reference/flagMixedSamples.md)
 counts markers with **more than two** alleles and flags a sample when
-that count **exceeds** `threeAlleleThreshold` (2, by default).
+that count **exceeds** `threeAlleleThreshold` (3, by default).
 
 ``` r
 
 batch <- readSTRProfiles(
     system.file("extdata", "Example_Batch_File.csv", package = "STRprofilerR")
 )
+#> Warning in .cleanAllelesCounted(markerTable[[i]], if (isAmel[[i]]) keepCalls
+#> else character(0)): NAs introduced by coercion
 
 flagMixedSamples(batch)
 #> Sample_A Sample_B Sample_C 
@@ -320,11 +346,11 @@ outDir <- file.path(tempdir(), "strprofiler-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260923.20_54_08.csv" 
-#> [2] "SampleA.strprofiler.20260923.20_54_08.csv"      
-#> [3] "SampleB.strprofiler.20260923.20_54_08.csv"      
-#> [4] "full_summary.strprofiler.20260923.20_54_08.html"
-#> [5] "strprofiler.20260923.20_54_08.log"
+#> [1] "full_summary.strprofiler.20260923.21_20_45.csv" 
+#> [2] "SampleA.strprofiler.20260923.21_20_45.csv"      
+#> [3] "SampleB.strprofiler.20260923.21_20_45.csv"      
+#> [4] "full_summary.strprofiler.20260923.21_20_45.html"
+#> [5] "strprofiler.20260923.21_20_45.log"
 ```
 
 That is a summary table, one table per query listing every reference it

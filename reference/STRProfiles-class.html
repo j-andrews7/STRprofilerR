@@ -99,6 +99,7 @@ timestamp, and package version.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_long.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="va">f</span>, sampleCol <span class="op">=</span> <span class="st">"Sample Name"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-in"><span><span class="va">p</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: STRProfiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> samples(2): SampleA SampleB</span>

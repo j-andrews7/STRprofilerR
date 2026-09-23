@@ -104,26 +104,31 @@ ordinary allele.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The sex markers are kept, in one spelling, and sort after numeric alleles.</span></span></span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y,X"</span>, <span class="st">"17.3, 12"</span>, <span class="st">""</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] X Y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]] 12 17.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]] character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]] character(0)</span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"x,X,y"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] X Y</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Uncallable peaks and free text are discarded, leaving a marker untyped.</span></span></span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"OL,11"</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] 11</span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OL"</span>, <span class="st">"12,NR,ND"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]] 12</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Repeat counts only.</span></span></span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"12,X"</span>, keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] 12</span>
 <span class="r-in"><span></span></span>

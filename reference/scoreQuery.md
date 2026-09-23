@@ -81,11 +81,13 @@ ref <- readSTRProfiles(
     system.file("extdata", "ExampleSTR_database.csv", package = "STRprofilerR"),
     sampleCol = "Sample Name"
 )
+#> Warning: NAs introduced by coercion
 
 scoreQuery(
     c(marker1 = "12,14", marker2 = "12", marker4 = "13", AMEL = "X"),
     ref
 )
+#> Warning: NAs introduced by coercion
 #> DataFrame with 5 rows and 9 columns
 #>         query   reference nSharedMarkers nSharedAlleles nQueryAlleles
 #>   <character> <character>      <integer>      <integer>     <integer>

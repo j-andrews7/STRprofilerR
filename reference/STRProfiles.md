@@ -14,7 +14,8 @@ STRProfiles(
   sampleCol = "Sample",
   pentaFix = TRUE,
   metadataCols = c("Center", "Passage"),
-  extraAliases = NULL
+  extraAliases = NULL,
+  keepCalls = c("X", "Y")
 )
 ```
 
@@ -45,6 +46,16 @@ STRProfiles(
   Named character vector of additional marker aliases, passed to
   [`harmonizeMarkers()`](https://j-andrews7.github.io/STRprofilerR/reference/markerAliases.md).
 
+- keepCalls:
+
+  Character vector of non-numeric calls that count as alleles, passed to
+  [`cleanAlleles()`](https://j-andrews7.github.io/STRprofilerR/reference/cleanAlleles.md)
+  and honoured at amelogenin markers only. Defaults to the sex markers
+  `X` and `Y`. Every other non-numeric call is an uncallable peak or
+  free text, and the per-sample count discarded is recorded in
+  [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md)
+  as `nDroppedCalls`.
+
 ## Value
 
 A STRProfiles object.
@@ -73,7 +84,7 @@ p
 #> class: STRProfiles
 #> samples(2): Line1 Line2
 #> markers(3): AMEL vWA PentaD
-#> sampleData(0):
+#> sampleData(1): nDroppedCalls
 #> markerClass: amelogenin(1) autosomal(2)
 alleles(p)[["PentaD"]]
 #> CharacterList of length 2

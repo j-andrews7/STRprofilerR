@@ -16,7 +16,8 @@ readSTRProfiles(
   pentaFix = TRUE,
   metadataCols = c("Center", "Passage"),
   format = c("auto", "wide", "long"),
-  extraAliases = NULL
+  extraAliases = NULL,
+  keepCalls = c("X", "Y")
 )
 ```
 
@@ -62,6 +63,16 @@ readSTRProfiles(
   Named character vector of additional marker aliases, passed to
   [`harmonizeMarkers()`](https://j-andrews7.github.io/STRprofilerR/reference/markerAliases.md).
 
+- keepCalls:
+
+  Character vector of non-numeric calls that count as alleles, passed to
+  [`cleanAlleles()`](https://j-andrews7.github.io/STRprofilerR/reference/cleanAlleles.md)
+  and honoured at amelogenin markers only. Defaults to the sex markers
+  `X` and `Y`. Every other non-numeric call is an uncallable peak or
+  free text, and the per-sample count discarded is recorded in
+  [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md)
+  as `nDroppedCalls`.
+
 ## Value
 
 A
@@ -99,16 +110,19 @@ empty allele. Sample names must be unique across all files.
 
 `metadataCols` are held in
 [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md)
-rather than being treated as markers. In `strprofiler` these columns
-flow into the scoring routine, so two samples sharing a `Center` of
-`"JAX"` score as sharing a marker.
+rather than alongside the markers. `strprofiler` 0.5.0 carries them in
+the profile and skips them at scoring and mixing time, so a custom
+metadata column has to be declared to each of those functions rather
+than once at ingest. (Through 0.4.2 it had no such argument, and two
+samples sharing a `Center` of `"JAX"` scored as sharing a marker.)
 
 Row order follows the input files. `strprofiler` returns wide-format
 samples in sorted order because it groups with `pandas`.
 
 All columns are read as text, so alleles are never coerced to numbers
 and back. This removes a class of bug that `strprofiler` patched twice
-(alleles ending in zero being truncated, for example `10` becoming `1`).
+through 0.4.2 (alleles ending in zero being truncated, for example `10`
+becoming `1`); 0.5.0 instead parses every call and renders it back.
 
 ## See also
 
@@ -130,7 +144,7 @@ p
 #> class: STRProfiles
 #> samples(2): SampleA SampleB
 #> markers(6): marker1 marker2 marker4 PentaD PentaE AMEL
-#> sampleData(0):
+#> sampleData(1): nDroppedCalls
 #> markerClass: amelogenin(1) autosomal(5)
 #> source(1): ExampleSTR_long.csv
 
@@ -144,12 +158,12 @@ markers(readSTRProfiles(long, sampleCol = "Sample Name", pentaFix = FALSE))
 db <- system.file("extdata", "main_database.csv", package = "STRprofilerR")
 ref <- readSTRProfiles(db)
 sampleData(ref)[1:3, ]
-#> DataFrame with 3 rows and 2 columns
-#>                 Center     Passage
-#>            <character> <character>
-#> J000077451         JAX          P0
-#> J000077591         JAX          P0
-#> J000077608         JAX          P0
+#> DataFrame with 3 rows and 3 columns
+#>                 Center     Passage nDroppedCalls
+#>            <character> <character>     <integer>
+#> J000077451         JAX          P0             0
+#> J000077591         JAX          P0             0
+#> J000077608         JAX          P0             0
 
 # Rename samples on the way in.
 smap <- system.file("extdata", "SampleMap_exp.csv", package = "STRprofilerR")

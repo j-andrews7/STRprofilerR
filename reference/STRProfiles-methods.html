@@ -116,7 +116,10 @@ character vectors. <code>[</code> and <code><a href="https://rdrr.io/r/base/c.ht
 <code>j</code>, both of which accept names, indices, or logical vectors.</p>
 <p><code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> flattens the object back to the wide layout
 <code><a href="readSTRProfiles.html">readSTRProfiles()</a></code> accepts, with alleles collapsed to comma-separated
-strings, so profiles round-trip through disk without loss.</p>
+strings, so profiles round-trip through disk without loss. Annotations the
+package computes at ingest rather than reading from the input — currently
+<code>nDroppedCalls</code> — are left out, since every column emitted is read back as a
+marker and a QC statistic is not one.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

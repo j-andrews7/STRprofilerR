@@ -124,9 +124,9 @@ search; check ahead of time with <code><a href="clastrMarkers.html">validateClas
 
 
 <p>The response is parsed directly from the nested JSON rather than through a
-flatten-and-pivot chain over generated column names. <code>strprofiler</code> also sends
-<code>algorithm = 2</code> for Masters (reference) in batch mode, which silently runs a
-Masters (query) search; <code>algorithm = 3</code> is sent here.</p>
+flatten-and-pivot chain over generated column names. <code>algorithm = 3</code> is sent
+for Masters (reference) in batch mode, as <code>strprofiler</code> does from 0.5.0;
+through 0.4.2 it sent <code>2</code>, which silently runs a Masters (query) search.</p>
 </div>
 
     </div>

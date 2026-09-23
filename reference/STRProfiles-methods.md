@@ -95,7 +95,10 @@ markers by `j`, both of which accept names, indices, or logical vectors.
 the object back to the wide layout
 [`readSTRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/readSTRProfiles.md)
 accepts, with alleles collapsed to comma-separated strings, so profiles
-round-trip through disk without loss.
+round-trip through disk without loss. Annotations the package computes
+at ingest rather than reading from the input — currently `nDroppedCalls`
+— are left out, since every column emitted is read back as a marker and
+a QC statistic is not one.
 
 ## Author
 

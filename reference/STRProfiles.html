@@ -51,7 +51,8 @@ strings. This is the inverse of <code><a href="https://rdrr.io/r/base/as.data.fr
 <span>  sampleCol <span class="op">=</span> <span class="st">"Sample"</span>,</span>
 <span>  pentaFix <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  metadataCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Center"</span>, <span class="st">"Passage"</span><span class="op">)</span>,</span>
-<span>  extraAliases <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  extraAliases <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -82,6 +83,14 @@ via <code><a href="markerAliases.html">markerAliases()</a></code>.</p></dd>
 <dd><p>Named character vector of additional marker aliases,
 passed to <code><a href="markerAliases.html">harmonizeMarkers()</a></code>.</p></dd>
 
+
+<dt id="arg-keepcalls">keepCalls<a class="anchor" aria-label="anchor" href="#arg-keepcalls"></a></dt>
+<dd><p>Character vector of non-numeric calls that count as alleles,
+passed to <code><a href="cleanAlleles.html">cleanAlleles()</a></code> and honoured at amelogenin markers only. Defaults
+to the sex markers <code>X</code> and <code>Y</code>. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+<code><a href="STRProfiles-accessors.html">sampleData()</a></code> as <code>nDroppedCalls</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -110,7 +119,7 @@ passed to <code><a href="markerAliases.html">harmonizeMarkers()</a></code>.</p><
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: STRProfiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> samples(2): Line1 Line2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> markers(3): AMEL vWA PentaD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sampleData(0):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sampleData(1): nDroppedCalls</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> markerClass: amelogenin(1) autosomal(2)</span>
 <span class="r-in"><span><span class="fu"><a href="STRProfiles-accessors.html">alleles</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">[[</span><span class="st">"PentaD"</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 2</span>

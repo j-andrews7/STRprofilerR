@@ -38,7 +38,7 @@
 <div class="section level2">
 <h2 id="repository-overview">Repository Overview<a class="anchor" aria-label="anchor" href="#repository-overview"></a></h2>
 <p><strong>STRprofilerR</strong> is a port to an R package of the <a href="https://github.com/j-andrews7/STRprofiler" class="external-link">strprofiler Python package</a>.</p>
-<p><strong>Stack</strong>: R 4.6.1+, Shiny, roxygen2 | <strong>Version</strong>: 0.99.0 (dev) | <strong>License</strong>: MIT</p>
+<p><strong>Stack</strong>: R 4.6.1+, Shiny, roxygen2 | <strong>Version</strong>: 0.99.1 (dev) | <strong>License</strong>: MIT</p>
 </div>
 <div class="section level2">
 <h2 id="repository-structure">Repository Structure<a class="anchor" aria-label="anchor" href="#repository-structure"></a></h2>
@@ -57,7 +57,7 @@ R/clastr.R                CLASTR REST client + JSON parser
 exec/strprofiler.R        Rapp CLI (compare / clastr / app)
 inst/extdata/             example profiles, databases, a recorded CLASTR response</code></pre>
 <p>Alleles are stored <strong>pre-split</strong>: each column of the <code>alleles</code> slot is a <code>CharacterList</code>. Scoring is vectorised as sparse matrix products (see the <code>@details</code> of <code>scoreProfiles</code>), not a loop over pairs – if you change scoring, the naive cross-check in <code>tests/testthat/test-scoring.R</code> is what guards it.</p>
-<p>Deliberate divergences from the Python package are enumerated in <code>NEWS.md</code>. Keep that list current when behaviour changes.</p>
+<p>Deliberate divergences from the Python package are enumerated in <code>NEWS.md</code>, checked against <a href="https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0" class="external-link">strprofiler 0.5.0</a>. Keep that list current when behaviour changes on either side – an upstream release can close a divergence or open a new one, and the same claims are repeated in <code>README.md</code>, the <code>@details</code> of the affected functions, and a few test comments.</p>
 <p>The Shiny application has <strong>not</strong> been ported; <code>strprofiler app</code> says so. It should also cite the <a href="https://pubmed.ncbi.nlm.nih.gov/39589865/" class="external-link">publication</a> appropriately.</p>
 </div>
 <div class="section level2">

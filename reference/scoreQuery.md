@@ -14,7 +14,8 @@ scoreQuery(
   sample = "Query",
   useAmel = FALSE,
   excludeMarkers = NULL,
-  pentaFix = TRUE
+  pentaFix = TRUE,
+  keepCalls = c("X", "Y")
 )
 ```
 
@@ -46,6 +47,16 @@ scoreQuery(
 - pentaFix:
 
   Logical scalar. Harmonise Penta marker spellings in `x`.
+
+- keepCalls:
+
+  Character vector of non-numeric calls that count as alleles, passed to
+  [`cleanAlleles()`](https://j-andrews7.github.io/STRprofilerR/reference/cleanAlleles.md)
+  and honoured at amelogenin markers only. Defaults to the sex markers
+  `X` and `Y`. Every other non-numeric call is an uncallable peak or
+  free text, and the per-sample count discarded is recorded in
+  [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md)
+  as `nDroppedCalls`.
 
 ## Value
 

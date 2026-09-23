@@ -35,36 +35,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.99.0" id="strprofilerr-0990">STRprofilerR 0.99.0<a class="anchor" aria-label="anchor" href="#strprofilerr-0990"></a></h2>
-<p>First release: an R port of the <a href="https://github.com/j-andrews7/STRprofiler" class="external-link">strprofiler</a> Python package, targeting Bioconductor.</p>
-<div class="section level3">
-<h3 id="features-0-99-0">Features<a class="anchor" aria-label="anchor" href="#features-0-99-0"></a></h3>
-<ul><li>
-<code><a href="../reference/readSTRProfiles.html">readSTRProfiles()</a></code> reads wide and long STR files (csv, tsv, txt, xlsx) into a <code>STRProfiles</code> S4 object, unioning markers across files and routing <code>Center</code>, <code>Passage</code>, and any other <code>metadataCols</code> into <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code> instead of treating them as markers.</li>
-<li>
-<code><a href="../reference/scoreProfiles.html">scoreProfiles()</a></code> computes the Tanabe and both Masters scores. Scoring is expressed as sparse matrix products rather than a loop over pairs, which makes whole-database comparison practical; <code>chunkSize</code> and <code>minScore</code> bound memory on large runs.</li>
-<li>
-<code><a href="../reference/compareProfiles.html">compareProfiles()</a></code> combines scoring, mixing detection, and summarisation into a <code>STRComparison</code> object, which <code><a href="../reference/writeSTRResults.html">writeSTRResults()</a></code> writes out as the file set the Python CLI produces.</li>
-<li>
-<code><a href="../reference/clastrQuery.html">clastrQuery()</a></code> and <code><a href="../reference/clastrBatchQuery.html">clastrBatchQuery()</a></code> search Cellosaurus through the CLASTR REST API, parsing the nested JSON response directly into a tidy table.</li>
-<li>A command line application built on <a href="https://github.com/r-lib/Rapp" class="external-link">Rapp</a>, with <code>compare</code> and <code>clastr</code> subcommands mirroring the Python CLI’s flags. Install the launcher with <code>Rapp::install_pkg_cli_apps("STRprofilerR")</code>.</li>
-<li>
-<code><a href="../reference/markerAliases.html">markerAliases()</a></code> makes marker name harmonisation a user-extensible table rather than three hard-coded Penta cases, and <code><a href="../reference/classifyMarkers.html">classifyMarkers()</a></code> tags amelogenin and Y-linked markers at ingest so amelogenin exclusion no longer depends on matching one configured column name.</li>
-</ul></div>
-<div class="section level3">
-<h3 id="deliberate-differences-from-the-python-package-0-99-0">Deliberate differences from the Python package<a class="anchor" aria-label="anchor" href="#deliberate-differences-from-the-python-package-0-99-0"></a></h3>
-<ul><li>Alleles are read as text throughout, so they are never coerced to numbers and back. This removes the class of bug <code>strprofiler</code> patched twice, where alleles ending in zero were truncated (<code>10</code> becoming <code>1</code>).</li>
-<li>
-<code>Center</code> and <code>Passage</code> are sample metadata, not markers. In <code>strprofiler</code> they reach the scoring routine, so two samples sharing a <code>Center</code> score as sharing a marker.</li>
-<li>Empty allele tokens are dropped during cleaning. <code>strprofiler</code> leaves a trailing comma in place and later counts the empty string as an allele.</li>
-<li>Comparisons with no markers in common return <code>NA</code> scores and one collated warning, rather than raising <code>ZeroDivisionError</code>.</li>
-<li>Summaries degrade to <code>NA</code> for queries with fewer than two comparisons, where <code>strprofiler</code> raises an <code>IndexError</code>.</li>
-<li>Each of the three match columns is ordered by its own score. <code>strprofiler</code> orders all three by the Tanabe score.</li>
-<li>
-<code><a href="../reference/clastrBatchQuery.html">clastrBatchQuery()</a></code> sends <code>algorithm = 3</code> for Masters (reference); <code>strprofiler</code> sends <code>2</code>, which silently runs a Masters (query) search.</li>
-<li>Output file names are sanitised, so a sample called <code>HT-29/P3</code> writes to <code>HT-29_P3.strprofiler.&lt;stamp&gt;.csv</code>. The name inside the file is untouched.</li>
-<li>HTML output is self-contained rather than loading jQuery and DataTables from a CDN at view time.</li>
-</ul></div>
-<div class="section level3">
+<ul><li>Submitted to Bioconductor.</li>
+<li>Aligned with <a href="https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0" class="external-link"><code>strprofiler</code> 0.5.0</a>.</li>
+</ul><div class="section level3">
 <h3 id="not-yet-ported-0-99-0">Not yet ported<a class="anchor" aria-label="anchor" href="#not-yet-ported-0-99-0"></a></h3>
 <ul><li>The Shiny application. <code>strprofiler app</code> reports this rather than failing obscurely.</li>
 </ul></div>

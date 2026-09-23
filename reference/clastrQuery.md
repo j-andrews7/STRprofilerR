@@ -86,9 +86,10 @@ This function needs network access, and **is for research use only**.
 ### Divergences from the Python package
 
 The response is parsed directly from the nested JSON rather than through
-a flatten-and-pivot chain over generated column names. `strprofiler`
-also sends `algorithm = 2` for Masters (reference) in batch mode, which
-silently runs a Masters (query) search; `algorithm = 3` is sent here.
+a flatten-and-pivot chain over generated column names. `algorithm = 3`
+is sent for Masters (reference) in batch mode, as `strprofiler` does
+from 0.5.0; through 0.4.2 it sent `2`, which silently runs a Masters
+(query) search.
 
 ## References
 

@@ -49,7 +49,8 @@ profile, as an interactive session or a query form would.</p>
 <span>  sample <span class="op">=</span> <span class="st">"Query"</span>,</span>
 <span>  useAmel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  excludeMarkers <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  pentaFix <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  pentaFix <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -81,6 +82,14 @@ out of scoring.</p></dd>
 
 <dt id="arg-pentafix">pentaFix<a class="anchor" aria-label="anchor" href="#arg-pentafix"></a></dt>
 <dd><p>Logical scalar. Harmonise Penta marker spellings in <code>x</code>.</p></dd>
+
+
+<dt id="arg-keepcalls">keepCalls<a class="anchor" aria-label="anchor" href="#arg-keepcalls"></a></dt>
+<dd><p>Character vector of non-numeric calls that count as alleles,
+passed to <code><a href="cleanAlleles.html">cleanAlleles()</a></code> and honoured at amelogenin markers only. Defaults
+to the sex markers <code>X</code> and <code>Y</code>. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+<code><a href="STRProfiles-accessors.html">sampleData()</a></code> as <code>nDroppedCalls</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -55,7 +55,7 @@
                         <h4 data-toc-skip class="author">Jared
 Andrews</h4>
             
-            <h4 data-toc-skip class="date">2026-09-15</h4>
+            <h4 data-toc-skip class="date">2026-09-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/j-andrews7/STRprofilerR/blob/main/vignettes/STRprofilerR.Rmd" class="external-link"><code>vignettes/STRprofilerR.Rmd</code></a></small>
       <div class="d-none name"><code>STRprofilerR.Rmd</code></div>
@@ -83,9 +83,10 @@ A low score is a prompt to investigate, not a verdict.</p>
 <div class="section level2">
 <h2 id="reading-profiles">Reading profiles<a class="anchor" aria-label="anchor" href="#reading-profiles"></a>
 </h2>
-<p>STR files come in two shapes, and <code><a href="../reference/readSTRProfiles.html">readSTRProfiles()</a></code>
-reads both. A <strong>long</strong> file has one row per sample and one
-column per marker:</p>
+<p>STR files typically come in one of two shapes (at least from our
+facility/platform), and <code><a href="../reference/readSTRProfiles.html">readSTRProfiles()</a></code> reads both. A
+<strong>long</strong> file has one row per sample and one column per
+marker:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">longFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_long.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">longFile</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
@@ -98,19 +99,19 @@ column per marker:</p>
 <span><span class="co">#&gt; class: STRProfiles</span></span>
 <span><span class="co">#&gt; samples(2): SampleA SampleB</span></span>
 <span><span class="co">#&gt; markers(6): marker1 marker2 marker4 PentaD PentaE AMEL</span></span>
-<span><span class="co">#&gt; sampleData(0):</span></span>
+<span><span class="co">#&gt; sampleData(1): nDroppedCalls</span></span>
 <span><span class="co">#&gt; markerClass: amelogenin(1) autosomal(5)</span></span>
 <span><span class="co">#&gt; source(1): ExampleSTR_long.csv</span></span></code></pre></div>
 <p>A <strong>wide</strong> file has one row per sample/marker pair, with
 the alleles spread across numbered columns. Columns whose names contain
 <code>Allele</code> are collected; size and height columns are ignored.
-Point <code>markerCol</code> at the marker column and the layout is
-detected automatically.</p>
+Point <code>markerCol</code> at the column containing marker names and
+the layout is detected automatically.</p>
 <p>Files of either shape, and of any supported format, can be read
 together. The marker set is the union across files, and samples missing
-a marker are recorded as untyped rather than as having no alleles — a
-distinction that matters, because untyped markers are skipped during
-scoring rather than counted as mismatches.</p>
+a marker are recorded as untyped rather than as having no alleles.
+Untyped markers are skipped during scoring rather than counted as
+mismatches.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xlsxFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR.xlsx"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span></span>
@@ -121,7 +122,7 @@ scoring rather than counted as mismatches.</p>
 <span><span class="co">#&gt; class: STRProfiles</span></span>
 <span><span class="co">#&gt; samples(4): SampleA SampleB Sample1 Sample3</span></span>
 <span><span class="co">#&gt; markers(7): marker1 marker2 ... AMEL marker3</span></span>
-<span><span class="co">#&gt; sampleData(0):</span></span>
+<span><span class="co">#&gt; sampleData(1): nDroppedCalls</span></span>
 <span><span class="co">#&gt; markerClass: amelogenin(1) autosomal(6)</span></span>
 <span><span class="co">#&gt; source(2): ExampleSTR_long.csv ExampleSTR.xlsx</span></span></code></pre></div>
 <div class="section level3">
@@ -169,11 +170,11 @@ found without you having to name the column:</p>
 <span><span class="co">#&gt; AMEL     amelogenin         2</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="metadata-not-markers">Metadata, not markers<a class="anchor" aria-label="anchor" href="#metadata-not-markers"></a>
+<h3 id="metadata">Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h3>
 <p>Database files often carry non-marker columns. Name them in
-<code>metadataCols</code> and they land in <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code>,
-safely out of the scoring:</p>
+<code>metadataCols</code> and they fall in <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code>,
+ignored for scoring purposes:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dbFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"main_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span><span class="va">reference</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span><span class="va">dbFile</span><span class="op">)</span></span>
@@ -181,15 +182,14 @@ safely out of the scoring:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">reference</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1258   18</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/STRProfiles-accessors.html">sampleData</a></span><span class="op">(</span><span class="va">reference</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; DataFrame with 3 rows and 2 columns</span></span>
-<span><span class="co">#&gt;                 Center     Passage</span></span>
-<span><span class="co">#&gt;            &lt;character&gt; &lt;character&gt;</span></span>
-<span><span class="co">#&gt; J000077451         JAX          P0</span></span>
-<span><span class="co">#&gt; J000077591         JAX          P0</span></span>
-<span><span class="co">#&gt; J000077608         JAX          P0</span></span></code></pre></div>
-<p>This is worth being careful about. If <code>Center</code> were
-treated as a marker, two samples from the same institution would score
-as sharing a marker they never had.</p>
+<span><span class="co">#&gt; DataFrame with 3 rows and 3 columns</span></span>
+<span><span class="co">#&gt;                 Center     Passage nDroppedCalls</span></span>
+<span><span class="co">#&gt;            &lt;character&gt; &lt;character&gt;     &lt;integer&gt;</span></span>
+<span><span class="co">#&gt; J000077451         JAX          P0             0</span></span>
+<span><span class="co">#&gt; J000077591         JAX          P0             0</span></span>
+<span><span class="co">#&gt; J000077608         JAX          P0             0</span></span></code></pre></div>
+<p>If using an existing database with extra sample metadata, be sure to
+set this so those columns aren’t used in scoring.</p>
 </div>
 </div>
 <div class="section level2">
@@ -212,10 +212,10 @@ the number of alleles each carries across those same markers:</p>
 <p>Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the
 two profiles and the score is unchanged. The Masters scores are not, and
 the asymmetry is the point. Masters (query) asks how much of the query
-the reference accounts for, which is the question when a query may be a
-contaminated or drifted derivative of a known line — a query containing
-everything the reference has <em>plus</em> extra alleles scores 100 on
-Masters (reference) while Tanabe drops.</p>
+the reference accounts for, which is useful when a query may be a
+contaminated. A query containing everything the reference has
+<em>plus</em> extra alleles scores 100 on Masters (reference) while
+Tanabe drops.</p>
 <p>Amelogenin is a sex marker rather than a polymorphic STR, so it is
 left out unless you ask for it with <code>useAmel = TRUE</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
@@ -253,7 +253,7 @@ left out unless you ask for it with <code>useAmel = TRUE</code>.</p>
 <span><span class="co">#&gt; 10                 8     22.2222              20.0         25.0000</span></span></code></pre></div>
 <p>Scoring is vectorised as a handful of sparse matrix products rather
 than a loop over pairs, so comparing a batch against a database of
-thousands is comfortable. <code>chunkSize</code> controls how many
+thousands is very quick. <code>chunkSize</code> controls how many
 queries are held in memory at once, and <code>minScore</code> discards
 weak pairs as they are produced:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
@@ -271,8 +271,8 @@ weak pairs as they are produced:</p>
 <div class="section level2">
 <h2 id="comparing-end-to-end">Comparing end to end<a class="anchor" aria-label="anchor" href="#comparing-end-to-end"></a>
 </h2>
-<p><code><a href="../reference/compareProfiles.html">compareProfiles()</a></code> does the whole job: score, flag
-mixing, summarise.</p>
+<p><code><a href="../reference/compareProfiles.html">compareProfiles()</a></code> runs scoring, flags mixing, and
+summarises.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareProfiles.html">compareProfiles</a></span><span class="op">(</span><span class="va">queries</span>, <span class="va">refs</span><span class="op">)</span></span>
 <span><span class="va">cmp</span></span>
@@ -305,10 +305,14 @@ dropping self-comparisons:</p>
 <h3 id="mixing">Mixing<a class="anchor" aria-label="anchor" href="#mixing"></a>
 </h3>
 <p>A diploid genome gives at most two alleles per autosomal marker.
-Consistently seeing three or more suggests more than one genome in the
-tube. <code><a href="../reference/flagMixedSamples.html">flagMixedSamples()</a></code> counts markers with <strong>more
-than two</strong> alleles and flags a sample when that count
-<strong>exceeds</strong> <code>threeAlleleThreshold</code>:</p>
+While models can get pretty messed up and may occasionally harbor a
+third allele, consistently seeing three or more in many markers suggests
+more than one genome in the tube.</p>
+<p>To help identify such cases, STRprofilerR’s
+<code><a href="../reference/flagMixedSamples.html">flagMixedSamples()</a></code> counts markers with <strong>more than
+two</strong> alleles and flags a sample when that count
+<strong>exceeds</strong> <code>threeAlleleThreshold</code> (2, by
+default).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">batch</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/readSTRProfiles.html">readSTRProfiles</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"Example_Batch_File.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
@@ -317,8 +321,7 @@ than two</strong> alleles and flags a sample when that count
 <span><span class="fu"><a href="../reference/flagMixedSamples.html">flagMixedSamples</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Sample_A Sample_B Sample_C </span></span>
 <span><span class="co">#&gt;    FALSE    FALSE    FALSE</span></span></code></pre></div>
-<p>Treat it as a screen. A flagged sample is worth a look at its
-electropherogram; an unflagged one is not evidence of purity.</p>
+<p>It is worth checking flagged samples more closely.</p>
 </div>
 </div>
 <div class="section level2">
@@ -331,11 +334,11 @@ command line tool does:</p>
 <span><span class="va">written</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/writeSTRResults.html">writeSTRResults</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="va">outDir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">written</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260915.23_00_17.csv" </span></span>
-<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260915.23_00_17.csv"      </span></span>
-<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260915.23_00_17.csv"      </span></span>
-<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260915.23_00_17.html"</span></span>
-<span><span class="co">#&gt; [5] "strprofiler.20260915.23_00_17.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "full_summary.strprofiler.20260923.15_49_30.csv" </span></span>
+<span><span class="co">#&gt; [2] "SampleA.strprofiler.20260923.15_49_30.csv"      </span></span>
+<span><span class="co">#&gt; [3] "SampleB.strprofiler.20260923.15_49_30.csv"      </span></span>
+<span><span class="co">#&gt; [4] "full_summary.strprofiler.20260923.15_49_30.html"</span></span>
+<span><span class="co">#&gt; [5] "strprofiler.20260923.15_49_30.log"</span></span></code></pre></div>
 <p>That is a summary table, one table per query listing every reference
 it was compared against with that reference’s alleles, a self-contained
 HTML view of the summary, and a log recording the parameters, inputs,
@@ -365,10 +368,9 @@ markers:</p>
 <span><span class="va">hits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/clastrQuery.html">clastrQuery</a></span><span class="op">(</span><span class="va">profile</span>, scoreFilter <span class="op">=</span> <span class="fl">90</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">hits</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"accession"</span>, <span class="st">"name"</span>, <span class="st">"score"</span>, <span class="st">"problem"</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p>A cell line with a known contamination history carries a note in
-<code>problem</code> — often the most useful column in the result. A
-result that CLASTR returns as two profiles appears as two rows, with
-<code>(Best)</code> and <code>(Worst)</code> appended to the
-accession.</p>
+<code>problem</code>. A result that CLASTR returns as two profiles
+appears as two rows, with <code>(Best)</code> and <code>(Worst)</code>
+appended to the accession.</p>
 <p><code><a href="../reference/clastrBatchQuery.html">clastrBatchQuery()</a></code> writes CLASTR’s own multi-sheet
 workbook instead, when you want its presentation rather than the
 data.</p>
@@ -423,16 +425,16 @@ driven without installing a launcher:</p>
 <span><span class="co">#&gt;  [1] Matrix_1.7-5        jsonlite_2.0.0      compiler_4.6.1     </span></span>
 <span><span class="co">#&gt;  [4] BiocManager_1.30.27 jquerylib_0.1.4     systemfonts_1.3.2  </span></span>
 <span><span class="co">#&gt;  [7] IRanges_2.46.0      textshaping_1.0.5   yaml_2.3.12        </span></span>
-<span><span class="co">#&gt; [10] fastmap_1.2.0       readxl_1.5.0        lattice_0.22-9     </span></span>
+<span><span class="co">#&gt; [10] fastmap_1.2.0       readxl_1.5.0.1      lattice_0.22-9     </span></span>
 <span><span class="co">#&gt; [13] R6_2.6.1            generics_0.1.4      knitr_1.52         </span></span>
 <span><span class="co">#&gt; [16] BiocGenerics_0.58.1 htmlwidgets_1.6.4   tibble_3.3.1       </span></span>
 <span><span class="co">#&gt; [19] bookdown_0.48       desc_1.4.3          bslib_0.12.0       </span></span>
 <span><span class="co">#&gt; [22] pillar_1.11.1       rlang_1.3.0         DT_0.34.0          </span></span>
-<span><span class="co">#&gt; [25] cachem_1.1.0        xfun_0.60           fs_2.1.0           </span></span>
+<span><span class="co">#&gt; [25] cachem_1.1.0        xfun_0.61           fs_2.1.0           </span></span>
 <span><span class="co">#&gt; [28] sass_0.4.10         otel_0.2.0          cli_3.6.6          </span></span>
 <span><span class="co">#&gt; [31] pkgdown_2.2.1       magrittr_2.0.5      crosstalk_1.2.2    </span></span>
 <span><span class="co">#&gt; [34] grid_4.6.1          digest_0.6.39       lifecycle_1.0.5    </span></span>
-<span><span class="co">#&gt; [37] S4Vectors_0.50.2    vctrs_0.7.3         evaluate_1.0.5     </span></span>
+<span><span class="co">#&gt; [37] S4Vectors_0.50.3    vctrs_0.7.3         evaluate_1.0.5     </span></span>
 <span><span class="co">#&gt; [40] glue_1.8.1          cellranger_1.1.0    ragg_1.5.2         </span></span>
 <span><span class="co">#&gt; [43] stats4_4.6.1        rmarkdown_2.32      tools_4.6.1        </span></span>
 <span><span class="co">#&gt; [46] pkgconfig_2.0.3     htmltools_0.5.9</span></span></code></pre></div>

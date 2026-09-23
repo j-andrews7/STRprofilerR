@@ -34,11 +34,6 @@ flagged when the number of such markers is **strictly greater than**
 `threeAlleleThreshold`. With the default of 3, a sample needs four or
 more three-allele markers before it is flagged.
 
-The `strprofiler` Python package describes this option as counting
-markers with "\>= 2 alleles", but its code counts markers with `> 2`.
-The behaviour here matches the code, since that is what produced the
-published results.
-
 This is a screening heuristic, not a test. A flagged sample warrants a
 look at its electropherogram; an unflagged one is not evidence of
 purity.

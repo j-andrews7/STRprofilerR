@@ -23,7 +23,8 @@ library(STRprofilerR)
 
 ## Reading profiles
 
-STR files come in two shapes, and
+STR files typically come in one of two shapes (at least from our
+facility/platform), and
 [`readSTRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/readSTRProfiles.md)
 reads both. A **long** file has one row per sample and one column per
 marker:
@@ -44,7 +45,7 @@ profiles
 #> class: STRProfiles
 #> samples(2): SampleA SampleB
 #> markers(6): marker1 marker2 marker4 PentaD PentaE AMEL
-#> sampleData(0):
+#> sampleData(1): nDroppedCalls
 #> markerClass: amelogenin(1) autosomal(5)
 #> source(1): ExampleSTR_long.csv
 ```
@@ -52,13 +53,13 @@ profiles
 A **wide** file has one row per sample/marker pair, with the alleles
 spread across numbered columns. Columns whose names contain `Allele` are
 collected; size and height columns are ignored. Point `markerCol` at the
-marker column and the layout is detected automatically.
+column containing marker names and the layout is detected automatically.
 
 Files of either shape, and of any supported format, can be read
 together. The marker set is the union across files, and samples missing
-a marker are recorded as untyped rather than as having no alleles — a
-distinction that matters, because untyped markers are skipped during
-scoring rather than counted as mismatches.
+a marker are recorded as untyped rather than as having no alleles.
+Untyped markers are skipped during scoring rather than counted as
+mismatches.
 
 ``` r
 
@@ -71,7 +72,7 @@ if (requireNamespace("readxl", quietly = TRUE)) {
 #> class: STRProfiles
 #> samples(4): SampleA SampleB Sample1 Sample3
 #> markers(7): marker1 marker2 ... AMEL marker3
-#> sampleData(0):
+#> sampleData(1): nDroppedCalls
 #> markerClass: amelogenin(1) autosomal(6)
 #> source(2): ExampleSTR_long.csv ExampleSTR.xlsx
 ```
@@ -134,12 +135,12 @@ markerData(profiles)
 #> AMEL     amelogenin         2
 ```
 
-### Metadata, not markers
+### Metadata
 
 Database files often carry non-marker columns. Name them in
-`metadataCols` and they land in
+`metadataCols` and they fall in
 [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md),
-safely out of the scoring:
+ignored for scoring purposes:
 
 ``` r
 
@@ -149,17 +150,16 @@ reference <- readSTRProfiles(dbFile)
 dim(reference)
 #> [1] 1258   18
 head(sampleData(reference), 3)
-#> DataFrame with 3 rows and 2 columns
-#>                 Center     Passage
-#>            <character> <character>
-#> J000077451         JAX          P0
-#> J000077591         JAX          P0
-#> J000077608         JAX          P0
+#> DataFrame with 3 rows and 3 columns
+#>                 Center     Passage nDroppedCalls
+#>            <character> <character>     <integer>
+#> J000077451         JAX          P0             0
+#> J000077591         JAX          P0             0
+#> J000077608         JAX          P0             0
 ```
 
-This is worth being careful about. If `Center` were treated as a marker,
-two samples from the same institution would score as sharing a marker
-they never had.
+If using an existing database with extra sample metadata, be sure to set
+this so those columns aren’t used in scoring.
 
 ## Scoring
 
@@ -178,10 +178,9 @@ the number of alleles each carries across those same markers:
 Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the two
 profiles and the score is unchanged. The Masters scores are not, and the
 asymmetry is the point. Masters (query) asks how much of the query the
-reference accounts for, which is the question when a query may be a
-contaminated or drifted derivative of a known line — a query containing
-everything the reference has *plus* extra alleles scores 100 on Masters
-(reference) while Tanabe drops.
+reference accounts for, which is useful when a query may be a
+contaminated. A query containing everything the reference has *plus*
+extra alleles scores 100 on Masters (reference) while Tanabe drops.
 
 Amelogenin is a sex marker rather than a polymorphic STR, so it is left
 out unless you ask for it with `useAmel = TRUE`.
@@ -224,7 +223,7 @@ scoreProfiles(queries, refs)
 
 Scoring is vectorised as a handful of sparse matrix products rather than
 a loop over pairs, so comparing a batch against a database of thousands
-is comfortable. `chunkSize` controls how many queries are held in memory
+is very quick. `chunkSize` controls how many queries are held in memory
 at once, and `minScore` discards weak pairs as they are produced:
 
 ``` r
@@ -244,7 +243,7 @@ scoreProfiles(queries, refs, minScore = 90)
 ## Comparing end to end
 
 [`compareProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/compareProfiles.md)
-does the whole job: score, flag mixing, summarise.
+runs scoring, flags mixing, and summarises.
 
 ``` r
 
@@ -287,12 +286,15 @@ compareProfiles(refs)
 
 ### Mixing
 
-A diploid genome gives at most two alleles per autosomal marker.
-Consistently seeing three or more suggests more than one genome in the
-tube.
+A diploid genome gives at most two alleles per autosomal marker. While
+models can get pretty messed up and may occasionally harbor a third
+allele, consistently seeing three or more in many markers suggests more
+than one genome in the tube.
+
+To help identify such cases, STRprofilerR’s
 [`flagMixedSamples()`](https://j-andrews7.github.io/STRprofilerR/reference/flagMixedSamples.md)
 counts markers with **more than two** alleles and flags a sample when
-that count **exceeds** `threeAlleleThreshold`:
+that count **exceeds** `threeAlleleThreshold` (2, by default).
 
 ``` r
 
@@ -305,8 +307,7 @@ flagMixedSamples(batch)
 #>    FALSE    FALSE    FALSE
 ```
 
-Treat it as a screen. A flagged sample is worth a look at its
-electropherogram; an unflagged one is not evidence of purity.
+It is worth checking flagged samples more closely.
 
 ## Writing results
 
@@ -319,11 +320,11 @@ outDir <- file.path(tempdir(), "strprofiler-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260915.23_00_17.csv" 
-#> [2] "SampleA.strprofiler.20260915.23_00_17.csv"      
-#> [3] "SampleB.strprofiler.20260915.23_00_17.csv"      
-#> [4] "full_summary.strprofiler.20260915.23_00_17.html"
-#> [5] "strprofiler.20260915.23_00_17.log"
+#> [1] "full_summary.strprofiler.20260923.15_49_30.csv" 
+#> [2] "SampleA.strprofiler.20260923.15_49_30.csv"      
+#> [3] "SampleB.strprofiler.20260923.15_49_30.csv"      
+#> [4] "full_summary.strprofiler.20260923.15_49_30.html"
+#> [5] "strprofiler.20260923.15_49_30.log"
 ```
 
 That is a summary table, one table per query listing every reference it
@@ -362,9 +363,8 @@ as.data.frame(hits)[, c("accession", "name", "score", "problem")]
 ```
 
 A cell line with a known contamination history carries a note in
-`problem` — often the most useful column in the result. A result that
-CLASTR returns as two profiles appears as two rows, with `(Best)` and
-`(Worst)` appended to the accession.
+`problem`. A result that CLASTR returns as two profiles appears as two
+rows, with `(Best)` and `(Worst)` appended to the accession.
 
 [`clastrBatchQuery()`](https://j-andrews7.github.io/STRprofilerR/reference/clastrBatchQuery.md)
 writes CLASTR’s own multi-sheet workbook instead, when you want its
@@ -429,16 +429,16 @@ sessionInfo()
 #>  [1] Matrix_1.7-5        jsonlite_2.0.0      compiler_4.6.1     
 #>  [4] BiocManager_1.30.27 jquerylib_0.1.4     systemfonts_1.3.2  
 #>  [7] IRanges_2.46.0      textshaping_1.0.5   yaml_2.3.12        
-#> [10] fastmap_1.2.0       readxl_1.5.0        lattice_0.22-9     
+#> [10] fastmap_1.2.0       readxl_1.5.0.1      lattice_0.22-9     
 #> [13] R6_2.6.1            generics_0.1.4      knitr_1.52         
 #> [16] BiocGenerics_0.58.1 htmlwidgets_1.6.4   tibble_3.3.1       
 #> [19] bookdown_0.48       desc_1.4.3          bslib_0.12.0       
 #> [22] pillar_1.11.1       rlang_1.3.0         DT_0.34.0          
-#> [25] cachem_1.1.0        xfun_0.60           fs_2.1.0           
+#> [25] cachem_1.1.0        xfun_0.61           fs_2.1.0           
 #> [28] sass_0.4.10         otel_0.2.0          cli_3.6.6          
 #> [31] pkgdown_2.2.1       magrittr_2.0.5      crosstalk_1.2.2    
 #> [34] grid_4.6.1          digest_0.6.39       lifecycle_1.0.5    
-#> [37] S4Vectors_0.50.2    vctrs_0.7.3         evaluate_1.0.5     
+#> [37] S4Vectors_0.50.3    vctrs_0.7.3         evaluate_1.0.5     
 #> [40] glue_1.8.1          cellranger_1.1.0    ragg_1.5.2         
 #> [43] stats4_4.6.1        rmarkdown_2.32      tools_4.6.1        
 #> [46] pkgconfig_2.0.3     htmltools_0.5.9

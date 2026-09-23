@@ -51,7 +51,8 @@ single <a href="STRProfiles.html">STRProfiles</a> object.</p>
 <span>  pentaFix <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  metadataCols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Center"</span>, <span class="st">"Passage"</span><span class="op">)</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"auto"</span>, <span class="st">"wide"</span>, <span class="st">"long"</span><span class="op">)</span>,</span>
-<span>  extraAliases <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  extraAliases <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -98,6 +99,14 @@ via <code><a href="markerAliases.html">markerAliases()</a></code>.</p></dd>
 <dd><p>Named character vector of additional marker aliases,
 passed to <code><a href="markerAliases.html">harmonizeMarkers()</a></code>.</p></dd>
 
+
+<dt id="arg-keepcalls">keepCalls<a class="anchor" aria-label="anchor" href="#arg-keepcalls"></a></dt>
+<dd><p>Character vector of non-numeric calls that count as alleles,
+passed to <code><a href="cleanAlleles.html">cleanAlleles()</a></code> and honoured at amelogenin markers only. Defaults
+to the sex markers <code>X</code> and <code>Y</code>. Every other non-numeric call is an uncallable
+peak or free text, and the per-sample count discarded is recorded in
+<code><a href="STRProfiles-accessors.html">sampleData()</a></code> as <code>nDroppedCalls</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -136,14 +145,17 @@ Sample names must be unique across all files.</p>
 <h3 id="divergences-from-the-python-package">Divergences from the Python package<a class="anchor" aria-label="anchor" href="#divergences-from-the-python-package"></a></h3>
 
 
-<p><code>metadataCols</code> are held in <code><a href="STRProfiles-accessors.html">sampleData()</a></code> rather than being treated as
-markers. In <code>strprofiler</code> these columns flow into the scoring routine, so two
-samples sharing a <code>Center</code> of <code>"JAX"</code> score as sharing a marker.</p>
+<p><code>metadataCols</code> are held in <code><a href="STRProfiles-accessors.html">sampleData()</a></code> rather than alongside the markers.
+<code>strprofiler</code> 0.5.0 carries them in the profile and skips them at scoring and
+mixing time, so a custom metadata column has to be declared to each of those
+functions rather than once at ingest. (Through 0.4.2 it had no such argument,
+and two samples sharing a <code>Center</code> of <code>"JAX"</code> scored as sharing a marker.)</p>
 <p>Row order follows the input files. <code>strprofiler</code> returns wide-format samples
 in sorted order because it groups with <code>pandas</code>.</p>
 <p>All columns are read as text, so alleles are never coerced to numbers and
-back. This removes a class of bug that <code>strprofiler</code> patched twice (alleles
-ending in zero being truncated, for example <code>10</code> becoming <code>1</code>).</p>
+back. This removes a class of bug that <code>strprofiler</code> patched twice through
+0.4.2 (alleles ending in zero being truncated, for example <code>10</code> becoming <code>1</code>);
+0.5.0 instead parses every call and renders it back.</p>
 </div>
 
     </div>
@@ -165,7 +177,7 @@ ending in zero being truncated, for example <code>10</code> becoming <code>1</co
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: STRProfiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> samples(2): SampleA SampleB</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> markers(6): marker1 marker2 marker4 PentaD PentaE AMEL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> sampleData(0):</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sampleData(1): nDroppedCalls</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> markerClass: amelogenin(1) autosomal(5)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> source(1): ExampleSTR_long.csv</span>
 <span class="r-in"><span></span></span>
@@ -179,12 +191,12 @@ ending in zero being truncated, for example <code>10</code> becoming <code>1</co
 <span class="r-in"><span><span class="va">db</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"main_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">ref</span> <span class="op">&lt;-</span> <span class="fu">readSTRProfiles</span><span class="op">(</span><span class="va">db</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="STRProfiles-accessors.html">sampleData</a></span><span class="op">(</span><span class="va">ref</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DataFrame with 3 rows and 2 columns</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Center     Passage</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;character&gt; &lt;character&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J000077451         JAX          P0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J000077591         JAX          P0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> J000077608         JAX          P0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DataFrame with 3 rows and 3 columns</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 Center     Passage nDroppedCalls</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;character&gt; &lt;character&gt;     &lt;integer&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> J000077451         JAX          P0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> J000077591         JAX          P0             0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> J000077608         JAX          P0             0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Rename samples on the way in.</span></span></span>
 <span class="r-in"><span><span class="va">smap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SampleMap_exp.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span></span>

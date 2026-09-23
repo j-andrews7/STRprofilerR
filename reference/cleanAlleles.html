@@ -43,7 +43,7 @@ de-duplicating and ordering them consistently.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="va">x</span>, keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -54,6 +54,13 @@ de-duplicating and ordering them consistently.</p>
 <dd><p>Character vector of comma-separated allele calls. <code>NA</code> is treated as
 an empty call.</p></dd>
 
+
+<dt id="arg-keepcalls">keepCalls<a class="anchor" aria-label="anchor" href="#arg-keepcalls"></a></dt>
+<dd><p>Character vector of non-numeric calls that count as alleles,
+compared case-insensitively against each whole token and stored in the
+spelling given here. Exports are not consistent about capitalisation. Pass
+<code>character(0)</code> to accept repeat counts only.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -62,15 +69,27 @@ cleaned allele vector for the corresponding input.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Each element is split on commas and each token trimmed. Tokens that parse as
-numbers are de-duplicated numerically, sorted ascending, and rendered without
-a trailing <code>.0</code>, so <code>"10.0"</code> and <code>"10"</code> collapse to a single <code>"10"</code> while
-<code>"9.3"</code> is preserved. Tokens that do not parse as numbers (such as the <code>X</code>
-and <code>Y</code> of amelogenin) are de-duplicated, sorted, and placed after the
-numeric ones.</p>
-<p>Empty tokens are dropped. This is a deliberate divergence from the
-<code>strprofiler</code> Python package, where a trailing comma (<code>"12,"</code>) survives
-cleaning and is later counted as a second, empty allele.</p>
+    <p>Each element is split on commas and each token trimmed. A token survives only
+if it is an allele:</p><ul><li><p>a finite repeat count, de-duplicated numerically, sorted ascending, and
+rendered without a trailing <code>.0</code>, so <code>"10.0"</code> and <code>"10"</code> collapse to a
+single <code>"10"</code> while <code>"9.3"</code> is preserved; or</p></li>
+<li><p>one of the calls named in <code>keepCalls</code>, matched case-insensitively and stored
+in the spelling given there, so <code>"x"</code> and <code>"X"</code> are one allele rather than
+two that never match. These sort after the numeric alleles.</p></li>
+</ul><p>Everything else is discarded: the empty token left by a trailing comma
+(<code>"12,"</code>), the codes a capillary-electrophoresis export uses for a peak it
+could not call (<code>OL</code> for one outside the ladder, <code>?</code> for one it declined to
+type, <code>NR</code>, <code>ND</code> and the like), and free text. None of them is an allele, and
+keeping them makes two profiles that merely failed at the same marker score as
+sharing a value; discarding them leaves the marker untyped, which lowers the
+shared-marker count instead. <code>"nan"</code> and <code>"inf"</code> go the same way, though
+<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric()</a></code> accepts both.</p>
+<p><code>keepCalls</code> defaults to the amelogenin sex markers, the only allele calls that
+are not repeat counts. <code><a href="readSTRProfiles.html">readSTRProfiles()</a></code> and <code><a href="STRProfiles.html">STRProfiles()</a></code> are stricter
+still and honour <code>keepCalls</code> at amelogenin markers only, since a letter at any
+other marker is a failed call rather than a sex call. <code>strprofiler</code> 0.5.0 keeps
+<code>X</code>/<code>Y</code> at every marker; through 0.4.2 it scored every one of these codes as an
+ordinary allele.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -83,13 +102,30 @@ cleaning and is later counted as a second, empty allele.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] 10 13 14</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Non-numeric alleles sort after numeric ones.</span></span></span>
+<span class="r-in"><span><span class="co"># The sex markers are kept, in one spelling, and sort after numeric alleles.</span></span></span>
 <span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Y,X"</span>, <span class="st">"17.3, 12"</span>, <span class="st">""</span>, <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] X Y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]] 12 17.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[3]] character(0)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[4]] character(0)</span>
+<span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"x,X,y"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] X Y</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Uncallable peaks and free text are discarded, leaving a marker untyped.</span></span></span>
+<span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"OL,11"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] 11</span>
+<span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OL"</span>, <span class="st">"12,NR,ND"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] character(0)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]] 12</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Repeat counts only.</span></span></span>
+<span class="r-in"><span><span class="fu">cleanAlleles</span><span class="op">(</span><span class="st">"12,X"</span>, keepCalls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> CharacterList of length 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]] 12</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

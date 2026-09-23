@@ -79,7 +79,7 @@ p
 #> class: STRProfiles
 #> samples(2): SampleA SampleB
 #> markers(6): marker1 marker2 marker4 PentaD PentaE AMEL
-#> sampleData(0):
+#> sampleData(1): nDroppedCalls
 #> markerClass: amelogenin(1) autosomal(5)
 #> source(1): ExampleSTR_long.csv
 ```

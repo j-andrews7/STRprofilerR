@@ -112,9 +112,9 @@ ref <- readSTRProfiles(
 out <- file.path(tempdir(), "strprofiler-demo")
 written <- writeSTRResults(compareProfiles(q, ref), out)
 basename(written)
-#> [1] "full_summary.strprofiler.20260923.21_20_41.csv" 
-#> [2] "SampleA.strprofiler.20260923.21_20_41.csv"      
-#> [3] "SampleB.strprofiler.20260923.21_20_41.csv"      
-#> [4] "full_summary.strprofiler.20260923.21_20_41.html"
-#> [5] "strprofiler.20260923.21_20_41.log"              
+#> [1] "full_summary.strprofiler.20260923.21_25_52.csv" 
+#> [2] "SampleA.strprofiler.20260923.21_25_52.csv"      
+#> [3] "SampleB.strprofiler.20260923.21_25_52.csv"      
+#> [4] "full_summary.strprofiler.20260923.21_25_52.html"
+#> [5] "strprofiler.20260923.21_25_52.log"              
 ```

@@ -82,9 +82,12 @@ cleanAlleles <- function(x, keepCalls = c("X", "Y")) {
     flat <- trimws(unlist(toks, use.names = FALSE))
 
     # An allele is a finite repeat count, or one of the calls 'keepCalls' permits.
-    # is.finite() rather than !is.na(), so the "nan" and "inf" that as.numeric()
-    # accepts are treated as the junk they are.
-    num <- as.numeric(flat)
+    # Only tokens written as a decimal number are converted: as.numeric() would
+    # warn for every letter (X, OL, ...), and would also accept the "nan", "inf",
+    # and hexadecimal spellings that are junk here.
+    decimal <- grepl("^[+-]?([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+-]?[0-9]+)?$", flat)
+    num <- rep(NA_real_, length(flat))
+    num[decimal] <- as.numeric(flat[decimal])
     isNum <- is.finite(num)
     permitted <- match(toupper(flat), toupper(keepCalls))
     isCall <- !isNum & !is.na(permitted)

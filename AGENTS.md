@@ -4,7 +4,7 @@
 
 **STRprofilerR** is a port to an R package of the [strprofiler Python package](https://github.com/j-andrews7/STRprofiler).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.99.1 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.99.0 (dev) | **License**: MIT
 
 ## Repository Structure
 
@@ -22,8 +22,12 @@ R/summarize.R             summarizeMatches()
 R/compare.R               compareProfiles() -- the top-level orchestrator
 R/report.R                writeSTRResults(), strHTMLTable()
 R/clastr.R                CLASTR REST client + JSON parser
+R/app.R                   STRprofilerApp(), page chrome, .appTry() error/warning plumbing
+R/app-{single,batch,database}.R  Shiny modules, one per tab
+R/app-tables.R            non-reactive table building for the app (unit-testable)
 exec/strprofiler.R        Rapp CLI (compare / clastr / app)
 inst/extdata/             example profiles, databases, a recorded CLASTR response
+inst/app/                 app usage guide (help.md) and www/ images
 ```
 
 Alleles are stored **pre-split**: each column of the `alleles` slot is a
@@ -31,14 +35,21 @@ Alleles are stored **pre-split**: each column of the `alleles` slot is a
 `@details` of `scoreProfiles`), not a loop over pairs -- if you change scoring,
 the naive cross-check in `tests/testthat/test-scoring.R` is what guards it.
 
-Deliberate divergences from the Python package are enumerated in `NEWS.md`,
-checked against [strprofiler 0.5.0](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.0).
-Keep that list current when behaviour changes on either side -- an upstream
-release can close a divergence or open a new one, and the same claims are
-repeated in `README.md`, the `@details` of the affected functions, and a few
-test comments.
+Deliberate divergences from the Python package are enumerated in the `@details`
+of the affected functions (the app's in `?STRprofilerApp`), checked against
+[strprofiler 0.5.1](https://github.com/j-andrews7/STRprofiler/releases/tag/v0.5.1).
+Keep them current when behaviour changes on either side - an upstream release
+can close a divergence or open a new one, and the same claims are repeated in
+`README.md`, `NEWS.md`, and a few test comments. A local clone of the Python
+package usually sits at `../strprofiler`.
 
-The Shiny application has **not** been ported; `strprofiler app` says so. It should also cite the [publication](https://pubmed.ncbi.nlm.nih.gov/39589865/) appropriately.
+The Shiny application is a port of the Python one: same tabs, controls, labels,
+defaults, and superhero theme. It cites the
+[publication](https://pubmed.ncbi.nlm.nih.gov/39589865/) in its footer and usage
+guide. `shiny`, `bslib`, and `DT` are in Suggests; `STRprofilerApp()` checks for
+them up front. Scoring and table building live in `R/app-tables.R` so they can
+be tested without a session; modules return their `results` reactive for
+`shiny::testServer()`.
 
 ## Build and Validation
 
@@ -46,6 +57,13 @@ The Shiny application has **not** been ported; `strprofiler app` says so. It sho
 Use **R 4.6.1** for development/build/test: C:\Program Files\R\R-4.6.1\bin\x64\R.exe
 
 Note `shiny::testServer()` cannot drive a plotly output, so anything downstream of a rendered figure (download handlers, client-side capture) needs a real browser to verify. `chromote` is available for that.
+
+To drive the app in a real browser without installing the package, point
+`shinytest2::AppDriver$new()` at a scratch `app.R` that calls
+`pkgload::load_all(<repo>)` then `STRprofilerApp()`, and set `NOT_CRAN=true`
+(AppDriver skips itself otherwise). Inside `testServer()`, expressions evaluate
+in the module's environment, so a test-local variable named like a module
+argument (`db`) is shadowed by it.
 
 ### The Rapp CLI
 

@@ -263,6 +263,7 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ```bash
 strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
 strprofiler clastr --score-filter 90 -o ./results batch.csv
+strprofiler app --database refs.csv
 strprofiler compare --help
 ```
 
@@ -274,6 +275,34 @@ launcher:
 ```{r cli-run, eval = FALSE}
 Rapp::run(system.file("exec", "strprofiler.R", package = "STRprofilerR"), "--help")
 ```
+
+# The Shiny application
+
+For colleagues who would rather not write code, `STRprofilerApp()` serves the
+same comparisons in a web browser. It is a port of the `strprofiler` Python
+package's application and needs the `shiny`, `bslib`, and `DT` packages.
+
+```{r app, eval = FALSE}
+STRprofilerApp()
+
+# Against your own database instead of the bundled one.
+STRprofilerApp(database = "our_database.csv")
+```
+
+The application has four tabs:
+
+- **Single Query**: type a profile in marker by marker and score it against
+  the database or search Cellosaurus with it. Alleles differing from the query
+  are highlighted in the report.
+- **Batch Query**: upload a file of profiles and compare it against the
+  database, within itself, or against Cellosaurus.
+- **Database File Management**: swap in a custom database for the session.
+- **Usage Guide**: how to read the reports, and what to cite.
+
+From a shell, `strprofiler app --database our_database.csv` does the same. To
+host the application for others, deploy an `app.R` that calls
+`STRprofilerR::STRprofilerApp()` with your database. See `?STRprofilerApp` for
+where it differs from the Python original.
 
 # Session info
 

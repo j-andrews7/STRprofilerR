@@ -103,8 +103,21 @@ test_that("compare writes the same results as the R API", {
     expect_identical(fromCli$tanabeMatches, fromApi$tanabeMatches)
 })
 
-test_that("the app command reports that the Shiny port is pending", {
+test_that("app help lists every option, in kebab-case", {
     skipUnlessApp()
+    out <- paste(runApp(c("app", "--help")), collapse = "\n")
 
-    expect_error(Rapp::run(appPath(), "app"), "not been ported yet")
+    for (flag in c("--database", "--sample-col", "--marker-col", "--port", "--host", "--launch-browser")) {
+        expect_match(out, flag, fixed = TRUE)
+    }
+})
+
+test_that("the app command rejects a missing database before serving", {
+    skipUnlessApp()
+    skip_if_not_installed("shiny")
+    skip_if_not_installed("bslib")
+    skip_if_not_installed("DT")
+
+    missing <- file.path(withr::local_tempdir(), "missing.csv")
+    expect_error(Rapp::run(appPath(), c("app", "--database", missing)), "File not found")
 })

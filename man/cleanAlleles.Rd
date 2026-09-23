@@ -47,7 +47,7 @@ shared-marker count instead. \code{"nan"} and \code{"inf"} go the same way, thou
 \code{keepCalls} defaults to the amelogenin sex markers, the only allele calls that
 are not repeat counts. \code{\link[=readSTRProfiles]{readSTRProfiles()}} and \code{\link[=STRProfiles]{STRProfiles()}} are stricter
 still and honour \code{keepCalls} at amelogenin markers only, since a letter at any
-other marker is a failed call rather than a sex call. \code{strprofiler} 0.5.0 keeps
+other marker is a failed call rather than a sex call. \code{strprofiler} (from 0.5.0) keeps
 \code{X}/\code{Y} at every marker; through 0.4.2 it scored every one of these codes as an
 ordinary allele.
 }

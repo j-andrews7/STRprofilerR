@@ -6,7 +6,7 @@
 \alias{STRprofilerR-package}
 \title{STRprofilerR: Compare Short Tandem Repeat Profiles for Model Authentication}
 \description{
-Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows.
+Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.
 }
 \seealso{
 Useful links:

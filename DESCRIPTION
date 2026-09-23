@@ -11,7 +11,8 @@ Description: Compares short tandem repeat (STR) profiles to authenticate
     heuristics for detecting sample mixing, flexible ingest of wide and long
     profile formats, comparison against user-supplied reference databases, and
     querying of the Cellosaurus knowledge base through the CLASTR REST API.
-    A command line application is included for use in automated workflows.
+    A command line application is included for use in automated workflows,
+    and a Shiny application for interactive queries.
 License: MIT + file LICENSE
 Encoding: UTF-8
 URL: https://github.com/j-andrews7/STRprofilerR
@@ -30,6 +31,7 @@ Imports:
     utils
 Suggests:
     BiocStyle,
+    bslib (>= 0.7.0),
     curl,
     DT,
     htmlwidgets,
@@ -38,6 +40,7 @@ Suggests:
     Rapp,
     readxl,
     rmarkdown,
+    shiny (>= 1.8.1),
     testthat (>= 3.0.0),
     withr,
     writexl

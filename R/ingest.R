@@ -26,7 +26,7 @@
 #' `keepCalls` defaults to the amelogenin sex markers, the only allele calls that
 #' are not repeat counts. [readSTRProfiles()] and [STRProfiles()] are stricter
 #' still and honour `keepCalls` at amelogenin markers only, since a letter at any
-#' other marker is a failed call rather than a sex call. `strprofiler` 0.5.0 keeps
+#' other marker is a failed call rather than a sex call. `strprofiler` (from 0.5.0) keeps
 #' `X`/`Y` at every marker; through 0.4.2 it scored every one of these codes as an
 #' ordinary allele.
 #'
@@ -182,7 +182,7 @@ cleanAlleles <- function(x, keepCalls = c("X", "Y")) {
 #' ## Divergences from the Python package
 #'
 #' `metadataCols` are held in [sampleData()] rather than alongside the markers.
-#' `strprofiler` 0.5.0 carries them in the profile and skips them at scoring and
+#' `strprofiler` (from 0.5.0) carries them in the profile and skips them at scoring and
 #' mixing time, so a custom metadata column has to be declared to each of those
 #' functions rather than once at ingest. (Through 0.4.2 it had no such argument,
 #' and two samples sharing a `Center` of `"JAX"` scored as sharing a marker.)
@@ -193,7 +193,7 @@ cleanAlleles <- function(x, keepCalls = c("X", "Y")) {
 #' All columns are read as text, so alleles are never coerced to numbers and
 #' back. This removes a class of bug that `strprofiler` patched twice through
 #' 0.4.2 (alleles ending in zero being truncated, for example `10` becoming `1`);
-#' 0.5.0 instead parses every call and renders it back.
+#' since 0.5.0 it instead parses every call and renders it back.
 #'
 #' @param files Character vector of paths. Supported extensions are `csv`,
 #'   `tsv`, `txt` (tab-separated), and `xlsx` (first sheet; needs `readxl`).

@@ -44,6 +44,20 @@ test_that("a query with no comparisons summarises to NA rather than erroring", {
     expect_true(all(is.na(s$nextBest)))
 })
 
+test_that("an Amelogenin column is scored only when asked for", {
+    # strprofiler 0.5.1's test_compare_honors_amel_col. Before 0.5.1 its CLI
+    # ignored --amel_col and always scored a column not named AMEL; here any
+    # amelogenin spelling is recognised without configuration.
+    p <- STRProfiles(data.frame(
+        Sample = c("Sample_A", "Sample_B"),
+        Amelogenin = c("X", "X,Y"),
+        m1 = "12", m2 = "14", m3 = "9"
+    ))
+
+    expect_identical(summary(compareProfiles(p))$topHit[[1L]], "Sample_B: 100.00")
+    expect_identical(summary(compareProfiles(p, useAmel = TRUE))$topHit[[1L]], "Sample_B: 88.89")
+})
+
 test_that("a single profile with no reference is rejected", {
     one <- readSTRProfiles(ed("ExampleSTR_long_1samp.csv"), sampleCol = "Sample Name")
 

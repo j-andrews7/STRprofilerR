@@ -10,6 +10,7 @@
 #|   - strprofiler compare -o ./results STR1.xlsx STR2.csv
 #|   - strprofiler compare --database refs.csv -o ./results batch.csv
 #|   - strprofiler clastr --score_filter 90 -o ./results batch.csv
+#|   - strprofiler app --database refs.csv
 
 # Top-level assignments in each branch are the command line surface, so they use
 # the snake_case spelling of the Python strprofiler flags rather than the
@@ -272,13 +273,43 @@ switch(
     },
 
     #| title: Launch the Shiny application
-    #| description: Not yet available in STRprofilerR.
+    #| description: |
+    #|   Serve the interactive STRprofiler application, for single and batch
+    #|   queries against a reference database or Cellosaurus. Needs the shiny,
+    #|   bslib, and DT packages.
+    #| examples:
+    #|   - strprofiler app
+    #|   - strprofiler app --database refs.csv --port 8080 --launch-browser
     app = {
-        stop(
-            "The Shiny application has not been ported yet.\n",
-            "Use 'strprofiler compare' for batch comparison, or the Python ",
-            "package's 'strprofiler app' in the meantime.",
-            call. = FALSE
+        #| description: |
+        #|   Path to a reference database in csv, tsv, txt, or xlsx format.
+        #|   Defaults to the bundled database of JAX PDX and NCI PDMR models.
+        #| short: d
+        database <- NA_character_
+
+        #| description: Name of the sample column in the database and uploaded files.
+        #| short: s
+        sample_col <- "Sample"
+
+        #| description: Name of the marker column. Only used for wide-format files.
+        #| short: m
+        marker_col <- "Marker"
+
+        #| description: Port to serve the application on.
+        #| short: p
+        port <- 8000L
+
+        #| description: Address to listen on. Use 0.0.0.0 to serve to other machines.
+        host <- "127.0.0.1"
+
+        #| description: Open the application in the default web browser.
+        launch_browser <- FALSE
+
+        strApp <- STRprofilerApp(
+            database = if (is.na(database)) NULL else database,
+            sampleCol = sample_col,
+            markerCol = marker_col
         )
+        shiny::runApp(strApp, port = port, host = host, launch.browser = launch_browser)
     }
 )

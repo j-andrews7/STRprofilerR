@@ -86,7 +86,7 @@ Sample names must be unique across all files.
 \subsection{Divergences from the Python package}{
 
 \code{metadataCols} are held in \code{\link[=sampleData]{sampleData()}} rather than alongside the markers.
-\code{strprofiler} 0.5.0 carries them in the profile and skips them at scoring and
+\code{strprofiler} (from 0.5.0) carries them in the profile and skips them at scoring and
 mixing time, so a custom metadata column has to be declared to each of those
 functions rather than once at ingest. (Through 0.4.2 it had no such argument,
 and two samples sharing a \code{Center} of \code{"JAX"} scored as sharing a marker.)
@@ -97,7 +97,7 @@ in sorted order because it groups with \code{pandas}.
 All columns are read as text, so alleles are never coerced to numbers and
 back. This removes a class of bug that \code{strprofiler} patched twice through
 0.4.2 (alleles ending in zero being truncated, for example \code{10} becoming \code{1});
-0.5.0 instead parses every call and renders it back.
+since 0.5.0 it instead parses every call and renders it back.
 }
 }
 \examples{

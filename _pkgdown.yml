@@ -46,6 +46,10 @@ reference:
   - clastrBatchQuery
   - clastrMarkers
 
+- title: Shiny application
+  contents:
+  - STRprofilerApp
+
 - title: Package
   contents:
   - STRprofilerR-package

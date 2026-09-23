@@ -32,7 +32,7 @@ test_that("cleanAlleles drops empty tokens", {
 
 test_that("cleanAlleles folds the case of kept calls", {
     # Scoring compares the cleaned calls literally, so "x" and "X" would
-    # otherwise be two alleles that never match. strprofiler 0.5.0 does the same.
+    # otherwise be two alleles that never match. strprofiler does the same from 0.5.0.
     expect_identical(cleanAlleles("X,x")[[1L]], "X")
     expect_identical(cleanAlleles("x,y")[[1L]], c("X", "Y"))
     expect_identical(cleanAlleles("12,x")[[1L]], c("12", "X"))

@@ -1,12 +1,12 @@
 # The Rapp app lives in the package's top-level exec/ directory, which is only
 # reachable via system.file() once the package is installed.
 appPath <- function() {
-    p <- system.file("exec", "strprofiler.R", package = "STRprofilerR")
+    p <- system.file("exec", "STRprofilerR.R", package = "STRprofilerR")
     if (nzchar(p) && file.exists(p)) {
         return(p)
     }
 
-    p <- testthat::test_path("..", "..", "exec", "strprofiler.R")
+    p <- testthat::test_path("..", "..", "exec", "STRprofilerR.R")
     if (file.exists(p)) {
         return(normalizePath(p, winslash = "/"))
     }

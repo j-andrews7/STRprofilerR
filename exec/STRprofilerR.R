@@ -1,5 +1,5 @@
 #!/usr/bin/env Rapp
-#| name: strprofiler
+#| name: strprofilerr
 #| title: STRprofilerR
 #| description: |
 #|   Compare short tandem repeat (STR) profiles to authenticate biomedical
@@ -7,10 +7,10 @@
 #|
 #|   For research use only.
 #| examples:
-#|   - strprofiler compare -o ./results STR1.xlsx STR2.csv
-#|   - strprofiler compare --database refs.csv -o ./results batch.csv
-#|   - strprofiler clastr --score_filter 90 -o ./results batch.csv
-#|   - strprofiler app --database refs.csv
+#|   - strprofilerr compare -o ./results STR1.xlsx STR2.csv
+#|   - strprofilerr compare --database refs.csv -o ./results batch.csv
+#|   - strprofilerr clastr --score_filter 90 -o ./results batch.csv
+#|   - strprofilerr app --database refs.csv
 
 # Top-level assignments in each branch are the command line surface, so they use
 # the snake_case spelling of the Python strprofiler flags rather than the
@@ -38,8 +38,8 @@ switch(
     #|   --database. Writes a summary table, a table per query sample, an HTML
     #|   view of the summary, and a log of the parameters used.
     #| examples:
-    #|   - strprofiler compare --tan_threshold 90 -o ./results STR1.csv
-    #|   - strprofiler compare -d refs.csv -s "Sample Name" -o ./results batch.csv
+    #|   - strprofilerr compare --tan_threshold 90 -o ./results STR1.csv
+    #|   - strprofilerr compare -d refs.csv -s "Sample Name" -o ./results batch.csv
     compare = {
         #| description: Minimum Tanabe score to report as a potential match.
         tan_threshold <- 80
@@ -96,7 +96,7 @@ switch(
 
         #| description: Directory to write results into.
         #| short: o
-        output_dir <- "./STRprofiler"
+        output_dir <- "./STRprofilerR"
 
         #| description: STR profile file(s) to compare.
         input_files... <- NULL
@@ -216,7 +216,7 @@ switch(
 
         #| description: Directory to write results into.
         #| short: o
-        output_dir <- "./STRprofiler"
+        output_dir <- "./STRprofilerR"
 
         #| description: STR profile file(s) to query.
         input_files... <- NULL
@@ -252,13 +252,13 @@ switch(
             includeAmelogenin = score_amel
         )
 
-        out <- file.path(output_dir, paste0("strprofiler.clastr.", stamp, ".csv"))
+        out <- file.path(output_dir, paste0("STRprofilerR.clastr.", stamp, ".csv"))
         utils::write.csv(as.data.frame(hits), out, row.names = FALSE, na = "")
         cat("Returned", nrow(hits), "hit(s) for", nrow(query), "profile(s).\n")
         cat("Wrote", out, "\n")
 
         if (xlsx) {
-            book <- file.path(output_dir, paste0("strprofiler.clastr.", stamp, ".xlsx"))
+            book <- file.path(output_dir, paste0("STRprofilerR.clastr.", stamp, ".xlsx"))
             clastrBatchQuery(
                 query, book,
                 algorithm = algorithm,

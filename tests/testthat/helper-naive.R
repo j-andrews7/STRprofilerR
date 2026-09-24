@@ -35,9 +35,9 @@ naiveScore <- function(query, reference, useAmel = FALSE) {
                 nSharedAlleles = shared,
                 nQueryAlleles = nq,
                 nReferenceAlleles = nr,
-                tanabeScore = 100 * 2 * shared / (nq + nr),
-                mastersQueryScore = 100 * shared / nq,
-                mastersRefScore = 100 * shared / nr,
+                tanabeScore = 100 * (2 * shared / (nq + nr)),
+                mastersQueryScore = 100 * (shared / nq),
+                mastersRefScore = 100 * (shared / nr),
                 stringsAsFactors = FALSE
             )
         }

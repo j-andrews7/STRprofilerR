@@ -239,9 +239,9 @@ scoreQuery <- function(x,
     nQuery <- mats$QC[idx, , drop = FALSE] %*% t(mats$RM)
     nRef <- mats$QM[idx, , drop = FALSE] %*% t(mats$RC)
 
-    tanabe <- 100 * 2 * sharedAlleles / (nQuery + nRef)
-    mastersQ <- 100 * sharedAlleles / nQuery
-    mastersR <- 100 * sharedAlleles / nRef
+    tanabe <- 100 * (2 * sharedAlleles / (nQuery + nRef))
+    mastersQ <- 100 * (sharedAlleles / nQuery)
+    mastersR <- 100 * (sharedAlleles / nRef)
 
     nEmpty <- sum(is.nan(tanabe))
     tanabe[is.nan(tanabe)] <- NA_real_

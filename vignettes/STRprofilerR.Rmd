@@ -25,7 +25,7 @@ material the model was supposed to come from.
 **STRprofilerR** compares STR profiles to each other or to a
 reference database, scores the similarity three ways, flags samples that look
 mixed, and can search the Cellosaurus knowledge base for a match. It is an R
-port of the [strprofiler](https://github.com/j-andrews7/STRprofiler) Python
+port of the [STRprofiler](https://github.com/j-andrews7/STRprofiler) Python
 package.
 
 **STRprofilerR is intended for research purposes only.** A low score is a
@@ -134,9 +134,8 @@ $$\textrm{Tanabe} = 100 \times \frac{2s}{q + r}
 \textrm{Masters (reference)} = 100 \times \frac{s}{r}$$
 
 Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the two profiles
-and the score is unchanged. The Masters scores are not, and the asymmetry is the
-point. Masters (query) asks how much of the query the reference accounts for,
-which is useful when a query may be a contaminated. A query containing everything the reference has *plus* extra
+and the score is unchanged. The Masters scores are not, which can be useful. Masters (query) asks how much of the query the reference accounts for,
+which is useful when a query may be contaminated. A query containing everything the reference has *plus* extra
 alleles scores 100 on Masters (reference) while Tanabe drops.
 
 Amelogenin is a sex marker rather than a polymorphic STR, so it is left out
@@ -169,7 +168,7 @@ cmp <- compareProfiles(queries, refs)
 cmp
 ```
 
-The summary carries one row per query — the best two hits, and everything
+The summary carries one row per query - the best two hits, and everything
 passing each threshold:
 
 ```{r summary}
@@ -220,9 +219,7 @@ the summary, and a log recording the parameters, inputs, and versions used.
 
 When you have no local reference for a line,
 [CLASTR](https://www.cellosaurus.org/str-search/) searches the human profiles in
-Cellosaurus. Check your marker names against its controlled vocabulary first —
-CLASTR silently ignores markers it does not recognise, which can quietly reduce
-a search to a handful of markers:
+Cellosaurus. Check your marker names against its controlled vocabulary first, as CLASTR silently ignores markers it does not recognise:
 
 ```{r validate}
 validateClastrMarkers(markers(refs))
@@ -261,21 +258,15 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ```
 
 ```bash
-strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
-strprofiler clastr --score-filter 90 -o ./results batch.csv
-strprofiler app --database refs.csv
-strprofiler compare --help
+strprofilerr compare --database refs.csv -o ./results STR1.xlsx STR2.csv
+strprofilerr clastr --score-filter 90 -o ./results batch.csv
+strprofilerr app --database refs.csv
+strprofilerr compare --help
 ```
 
 Flags mirror the Python CLI, and both spellings are accepted, so
 `--sample-col` and `--sample_col` both work and existing invocations keep
-running. During development the app can be driven without installing a
-launcher:
-
-```{r cli-run, eval = FALSE}
-Rapp::run(system.file("exec", "strprofiler.R", package = "STRprofilerR"), "--help")
-```
-
+running.
 # The Shiny application
 
 For colleagues who would rather not write code, `STRprofilerApp()` serves the
@@ -299,10 +290,9 @@ The application has four tabs:
 - **Database File Management**: swap in a custom database for the session.
 - **Usage Guide**: how to read the reports, and what to cite.
 
-From a shell, `strprofiler app --database our_database.csv` does the same. To
+From a shell, `strprofilerr app --database our_database.csv` does the same. To
 host the application for others, deploy an `app.R` that calls
-`STRprofilerR::STRprofilerApp()` with your database. See `?STRprofilerApp` for
-where it differs from the Python original.
+`STRprofilerR::STRprofilerApp()` with your database. 
 
 # Session info
 

@@ -9,7 +9,7 @@
 **STRprofilerR** compares short tandem repeat (STR) profiles to authenticate
 biomedical models (cell lines, xenografts, organoids) against the primary
 tissue they were derived from. It is an R port of the
-[strprofiler](https://github.com/j-andrews7/STRprofiler) Python package.
+[STRprofiler](https://github.com/j-andrews7/STRprofiler) Python package.
 
 **STRprofilerR is intended for research purposes only.**
 
@@ -102,10 +102,10 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ```
 
 ```bash
-strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
-strprofiler clastr --score-filter 90 -o ./results batch.csv
-strprofiler app --database refs.csv
-strprofiler compare --help
+strprofilerr compare --database refs.csv -o ./results STR1.xlsx STR2.csv
+strprofilerr clastr --score-filter 90 -o ./results batch.csv
+strprofilerr app --database refs.csv
+strprofilerr compare --help
 ```
 
 Flags mirror the Python CLI. Both `--sample-col` and `--sample_col` are

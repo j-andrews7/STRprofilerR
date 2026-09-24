@@ -13,6 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Compare Short Tandem Repeat Profiles for Model Authentication">
 <meta name="description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.">
 <meta property="og:description" content="Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.">
+<meta property="og:image" content="https://j-andrews7.github.io/STRprofilerR/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -48,10 +49,13 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="strprofilerr">STRprofilerR<a class="anchor" aria-label="anchor" href="#strprofilerr"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="strprofilerr-">STRprofilerR <a class="anchor" aria-label="anchor" href="#strprofilerr-"></a>
+</h1>
+</div>
 <!-- badges: start -->
 
+<!-- badges: end -->
 <p><strong>STRprofilerR</strong> compares short tandem repeat (STR) profiles to authenticate biomedical models (cell lines, xenografts, organoids) against the primary tissue they were derived from. It is an R port of the <a href="https://github.com/j-andrews7/STRprofiler" class="external-link">strprofiler</a> Python package.</p>
 <p><strong>STRprofilerR is intended for research purposes only.</strong></p>
 <p>For every profile you provide, STRprofilerR reports three similarity scores against every other profile:</p>
@@ -272,6 +276,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://doi.org/10.5281/zenodo.14262310" class="external-link"><img src="https://zenodo.org/badge/doi/10.5281/zenodo.14262310.svg" alt="DOI"></a></li>
 </ul>
 </div>
 

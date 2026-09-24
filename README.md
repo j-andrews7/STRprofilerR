@@ -1,7 +1,9 @@
-# STRprofilerR
+# STRprofilerR <img src="man/figures/logo.png" align="right" width = "50%"/>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml)
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.14262310.svg)](https://doi.org/10.5281/zenodo.14262310)
+
 <!-- badges: end -->
 
 **STRprofilerR** compares short tandem repeat (STR) profiles to authenticate

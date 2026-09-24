@@ -1,4 +1,4 @@
-# STRprofilerR <img src="man/figures/logo.png" align="right" width = "50%"/>
+# STRprofilerR <img src="man/figures/logo.png" align="right" width = "20%"/>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/j-andrews7/STRprofilerR/actions/workflows/R-CMD-check.yaml)

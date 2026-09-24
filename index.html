@@ -56,7 +56,7 @@
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p><strong>STRprofilerR</strong> compares short tandem repeat (STR) profiles to authenticate biomedical models (cell lines, xenografts, organoids) against the primary tissue they were derived from. It is an R port of the <a href="https://github.com/j-andrews7/STRprofiler" class="external-link">strprofiler</a> Python package.</p>
+<p><strong>STRprofilerR</strong> compares short tandem repeat (STR) profiles to authenticate biomedical models (cell lines, xenografts, organoids) against the primary tissue they were derived from. It is an R port of the <a href="https://github.com/j-andrews7/STRprofiler" class="external-link">STRprofiler</a> Python package.</p>
 <p><strong>STRprofilerR is intended for research purposes only.</strong></p>
 <p>For every profile you provide, STRprofilerR reports three similarity scores against every other profile:</p>
 <table class="table">
@@ -186,10 +186,10 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"Rapp"</span><span class="op">)</span></span>
 <span><span class="fu">Rapp</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Rapp/man/install_pkg_cli_apps.html" class="external-link">install_pkg_cli_apps</a></span><span class="op">(</span><span class="st">"STRprofilerR"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--database</span> refs.csv <span class="at">-o</span> ./results STR1.xlsx STR2.csv</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">strprofiler</span> clastr <span class="at">--score-filter</span> 90 <span class="at">-o</span> ./results batch.csv</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">strprofiler</span> app <span class="at">--database</span> refs.csv</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">strprofiler</span> compare <span class="at">--help</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">strprofilerr</span> compare <span class="at">--database</span> refs.csv <span class="at">-o</span> ./results STR1.xlsx STR2.csv</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">strprofilerr</span> clastr <span class="at">--score-filter</span> 90 <span class="at">-o</span> ./results batch.csv</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">strprofilerr</span> app <span class="at">--database</span> refs.csv</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">strprofilerr</span> compare <span class="at">--help</span></span></code></pre></div>
 <p>Flags mirror the Python CLI. Both <code>--sample-col</code> and <code>--sample_col</code> are accepted, so existing invocations keep working.</p>
 </div>
 <div class="section level2">

@@ -11,7 +11,7 @@ result against the material the model was supposed to come from.
 database, scores the similarity three ways, flags samples that look
 mixed, and can search the Cellosaurus knowledge base for a match. It is
 an R port of the
-[strprofiler](https://github.com/j-andrews7/STRprofiler) Python package.
+[STRprofiler](https://github.com/j-andrews7/STRprofiler) Python package.
 
 **STRprofilerR is intended for research purposes only.** A low score is
 a prompt to investigate, not a verdict.
@@ -176,11 +176,11 @@ the number of alleles each carries across those same markers:
 ```
 
 Tanabe is the Sørensen–Dice coefficient and is symmetric: swap the two
-profiles and the score is unchanged. The Masters scores are not, and the
-asymmetry is the point. Masters (query) asks how much of the query the
-reference accounts for, which is useful when a query may be a
-contaminated. A query containing everything the reference has *plus*
-extra alleles scores 100 on Masters (reference) while Tanabe drops.
+profiles and the score is unchanged. The Masters scores are not, which
+can be useful. Masters (query) asks how much of the query the reference
+accounts for, which is useful when a query may be contaminated. A query
+containing everything the reference has *plus* extra alleles scores 100
+on Masters (reference) while Tanabe drops.
 
 Amelogenin is a sex marker rather than a polymorphic STR, so it is left
 out unless you ask for it with `useAmel = TRUE`.
@@ -258,7 +258,7 @@ cmp
 #> flagged as mixed: 0
 ```
 
-The summary carries one row per query — the best two hits, and
+The summary carries one row per query - the best two hits, and
 everything passing each threshold:
 
 ``` r
@@ -320,11 +320,11 @@ outDir <- file.path(tempdir(), "strprofiler-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260924.18_44_12.csv" 
-#> [2] "SampleA.strprofiler.20260924.18_44_12.csv"      
-#> [3] "SampleB.strprofiler.20260924.18_44_12.csv"      
-#> [4] "full_summary.strprofiler.20260924.18_44_12.html"
-#> [5] "strprofiler.20260924.18_44_12.log"
+#> [1] "full_summary.strprofiler.20260924.19_21_26.csv" 
+#> [2] "SampleA.strprofiler.20260924.19_21_26.csv"      
+#> [3] "SampleB.strprofiler.20260924.19_21_26.csv"      
+#> [4] "full_summary.strprofiler.20260924.19_21_26.html"
+#> [5] "strprofiler.20260924.19_21_26.log"
 ```
 
 That is a summary table, one table per query listing every reference it
@@ -337,8 +337,8 @@ and versions used.
 When you have no local reference for a line,
 [CLASTR](https://www.cellosaurus.org/str-search/) searches the human
 profiles in Cellosaurus. Check your marker names against its controlled
-vocabulary first — CLASTR silently ignores markers it does not
-recognise, which can quietly reduce a search to a handful of markers:
+vocabulary first, as CLASTR silently ignores markers it does not
+recognise:
 
 ``` r
 
@@ -382,23 +382,15 @@ Rapp::install_pkg_cli_apps("STRprofilerR")
 ```
 
 ``` bash
-strprofiler compare --database refs.csv -o ./results STR1.xlsx STR2.csv
-strprofiler clastr --score-filter 90 -o ./results batch.csv
-strprofiler app --database refs.csv
-strprofiler compare --help
+strprofilerr compare --database refs.csv -o ./results STR1.xlsx STR2.csv
+strprofilerr clastr --score-filter 90 -o ./results batch.csv
+strprofilerr app --database refs.csv
+strprofilerr compare --help
 ```
 
 Flags mirror the Python CLI, and both spellings are accepted, so
 `--sample-col` and `--sample_col` both work and existing invocations
-keep running. During development the app can be driven without
-installing a launcher:
-
-``` r
-
-Rapp::run(system.file("exec", "strprofiler.R", package = "STRprofilerR"), "--help")
-```
-
-## The Shiny application
+keep running. \# The Shiny application
 
 For colleagues who would rather not write code,
 [`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
@@ -425,12 +417,10 @@ The application has four tabs:
   session.
 - **Usage Guide**: how to read the reports, and what to cite.
 
-From a shell, `strprofiler app --database our_database.csv` does the
+From a shell, `strprofilerr app --database our_database.csv` does the
 same. To host the application for others, deploy an `app.R` that calls
 [`STRprofilerR::STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
-with your database. See
-[`?STRprofilerApp`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
-for where it differs from the Python original.
+with your database.
 
 ## Session info
 

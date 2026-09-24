@@ -10,7 +10,7 @@ writeSTRResults(
   formats = c("csv", "html"),
   perSample = TRUE,
   timestamp = Sys.time(),
-  prefix = "strprofiler"
+  prefix = "STRprofilerR"
 )
 }
 \arguments{
@@ -37,22 +37,25 @@ tool produces: a summary table, one table per query sample, an HTML view of
 the summary, and a log recording the parameters used.
 }
 \details{
+Files are named with an \code{STRprofilerR} prefix where the Python package uses
+\code{strprofiler}, so results from the two are distinguishable.
+
 Written into \code{dir}, with \verb{<stamp>} a \code{YYYYMMDD.HH_MM_SS} timestamp:
 
 \describe{
-\item{\verb{full_summary.strprofiler.<stamp>.csv}}{One row per query: the
+\item{\verb{full_summary.STRprofilerR.<stamp>.csv}}{One row per query: the
 mixing flag, top two hits, and every hit passing each threshold.}
-\item{\verb{<sample>.strprofiler.<stamp>.csv}}{One file per query, listing every
+\item{\verb{<sample>.STRprofilerR.<stamp>.csv}}{One file per query, listing every
 reference it was compared against with the scores and that reference's
 alleles. The query itself is the first row.}
-\item{\verb{full_summary.strprofiler.<stamp>.html}}{The summary as a browsable
+\item{\verb{full_summary.STRprofilerR.<stamp>.html}}{The summary as a browsable
 table.}
-\item{\verb{strprofiler.<stamp>.log}}{Parameters, input files, and package and R
+\item{\verb{STRprofilerR.<stamp>.log}}{Parameters, input files, and package and R
 versions.}
 }
 
 Sample names are sanitised for use as file names, so a query called
-\code{HT-29/P3} is written as \verb{HT-29_P3.strprofiler.<stamp>.csv}. The name inside
+\code{HT-29/P3} is written as \verb{HT-29_P3.STRprofilerR.<stamp>.csv}. The name inside
 the file is untouched.
 
 The HTML is written with \code{DT} when \code{DT}, \code{htmlwidgets}, and \code{pandoc} are all
@@ -71,7 +74,7 @@ ref <- readSTRProfiles(
     sampleCol = "Sample Name"
 )
 
-out <- file.path(tempdir(), "strprofiler-demo")
+out <- file.path(tempdir(), "STRprofilerR-demo")
 written <- writeSTRResults(compareProfiles(q, ref), out)
 basename(written)
 

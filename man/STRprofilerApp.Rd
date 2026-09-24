@@ -60,7 +60,7 @@ your own database, on Posit Connect or a Shiny Server for example, deploy an
 \if{html}{\out{<div class="sourceCode">}}\preformatted{STRprofilerR::STRprofilerApp(database = "my_database.csv")
 }\if{html}{\out{</div>}}
 
-From a shell, \verb{strprofiler app --database my_database.csv} runs the same
+From a shell, \verb{strprofilerr app --database my_database.csv} runs the same
 application locally.
 }
 

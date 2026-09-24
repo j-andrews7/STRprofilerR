@@ -202,10 +202,11 @@ It is worth checking flagged samples more closely.
 
 # Writing results
 
-`writeSTRResults()` produces the file set the Python command line tool does:
+`writeSTRResults()` produces the file set the Python command line tool does,
+prefixed `STRprofilerR` rather than `strprofiler`:
 
 ```{r write}
-outDir <- file.path(tempdir(), "strprofiler-vignette")
+outDir <- file.path(tempdir(), "STRprofilerR-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)

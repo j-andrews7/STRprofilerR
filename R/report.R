@@ -5,22 +5,25 @@
 #' the summary, and a log recording the parameters used.
 #'
 #' @details
+#' Files are named with an `STRprofilerR` prefix where the Python package uses
+#' `strprofiler`, so results from the two are distinguishable.
+#'
 #' Written into `dir`, with `<stamp>` a `YYYYMMDD.HH_MM_SS` timestamp:
 #'
 #' \describe{
-#'   \item{`full_summary.strprofiler.<stamp>.csv`}{One row per query: the
+#'   \item{`full_summary.STRprofilerR.<stamp>.csv`}{One row per query: the
 #'     mixing flag, top two hits, and every hit passing each threshold.}
-#'   \item{`<sample>.strprofiler.<stamp>.csv`}{One file per query, listing every
+#'   \item{`<sample>.STRprofilerR.<stamp>.csv`}{One file per query, listing every
 #'     reference it was compared against with the scores and that reference's
 #'     alleles. The query itself is the first row.}
-#'   \item{`full_summary.strprofiler.<stamp>.html`}{The summary as a browsable
+#'   \item{`full_summary.STRprofilerR.<stamp>.html`}{The summary as a browsable
 #'     table.}
-#'   \item{`strprofiler.<stamp>.log`}{Parameters, input files, and package and R
+#'   \item{`STRprofilerR.<stamp>.log`}{Parameters, input files, and package and R
 #'     versions.}
 #' }
 #'
 #' Sample names are sanitised for use as file names, so a query called
-#' `HT-29/P3` is written as `HT-29_P3.strprofiler.<stamp>.csv`. The name inside
+#' `HT-29/P3` is written as `HT-29_P3.STRprofilerR.<stamp>.csv`. The name inside
 #' the file is untouched.
 #'
 #' The HTML is written with `DT` when `DT`, `htmlwidgets`, and `pandoc` are all
@@ -54,7 +57,7 @@
 #'     sampleCol = "Sample Name"
 #' )
 #'
-#' out <- file.path(tempdir(), "strprofiler-demo")
+#' out <- file.path(tempdir(), "STRprofilerR-demo")
 #' written <- writeSTRResults(compareProfiles(q, ref), out)
 #' basename(written)
 #'
@@ -64,7 +67,7 @@ writeSTRResults <- function(x,
                             formats = c("csv", "html"),
                             perSample = TRUE,
                             timestamp = Sys.time(),
-                            prefix = "strprofiler") {
+                            prefix = "STRprofilerR") {
     stopifnot(is(x, "STRComparison"))
     formats <- match.arg(formats, c("csv", "html", "xlsx"), several.ok = TRUE)
 

@@ -6,6 +6,8 @@
 \alias{STRprofilerR-package}
 \title{STRprofilerR: Compare Short Tandem Repeat Profiles for Model Authentication}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Compares short tandem repeat (STR) profiles to authenticate biomedical models such as cell lines and xenografts against the primary tissue samples they were derived from. Provides the Tanabe (Sorenson-Dice), Masters (versus query), and Masters (versus reference) similarity scores, heuristics for detecting sample mixing, flexible ingest of wide and long profile formats, comparison against user-supplied reference databases, and querying of the Cellosaurus knowledge base through the CLASTR REST API. A command line application is included for use in automated workflows, and a Shiny application for interactive queries.
 }
 \seealso{
@@ -17,11 +19,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Jared Andrews \email{jared.andrews07@gmail.com}
+\strong{Maintainer}: Jared Andrews \email{jared.andrews07@gmail.com} (\href{https://orcid.org/0000-0002-0780-6248}{ORCID})
 
 Authors:
 \itemize{
-  \item Jared Andrews \email{jared.andrews07@gmail.com}
+  \item Jared Andrews \email{jared.andrews07@gmail.com} (\href{https://orcid.org/0000-0002-0780-6248}{ORCID})
 }
 
 }

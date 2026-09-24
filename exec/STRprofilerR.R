@@ -162,8 +162,8 @@ switch(
     #|   Compare STR profiles against the human Cellosaurus knowledge base using
     #|   the CLASTR REST API. Needs network access.
     #| examples:
-    #|   - strprofiler clastr --score_filter 90 -o ./results batch.csv
-    #|   - strprofiler clastr --search_algorithm mastersQuery --xlsx batch.csv
+    #|   - strprofilerr clastr --score_filter 90 -o ./results batch.csv
+    #|   - strprofilerr clastr --search_algorithm mastersQuery --xlsx batch.csv
     clastr = {
         #| description: |
         #|   Score to rank by: tanabe, mastersQuery, or mastersRef. The Python
@@ -278,8 +278,8 @@ switch(
     #|   queries against a reference database or Cellosaurus. Needs the shiny,
     #|   bslib, and DT packages.
     #| examples:
-    #|   - strprofiler app
-    #|   - strprofiler app --database refs.csv --port 8080 --launch-browser
+    #|   - strprofilerr app
+    #|   - strprofilerr app --database refs.csv --port 8080 --launch-browser
     app = {
         #| description: |
         #|   Path to a reference database in csv, tsv, txt, or xlsx format.

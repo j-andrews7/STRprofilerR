@@ -39,7 +39,7 @@
 #' STRprofilerR::STRprofilerApp(database = "my_database.csv")
 #' ```
 #'
-#' From a shell, `strprofiler app --database my_database.csv` runs the same
+#' From a shell, `strprofilerr app --database my_database.csv` runs the same
 #' application locally.
 #'
 #' ## Divergences from the Python package

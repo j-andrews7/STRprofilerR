@@ -82,9 +82,9 @@ test_that("writeSTRResults writes the expected file set", {
 
     expect_setequal(names(written), c("summary", "SampleA", "SampleB", "html", "log"))
     expect_true(all(file.exists(written)))
-    expect_true(file.exists(file.path(dir, "full_summary.strprofiler.20260102.03_04_05.csv")))
-    expect_true(file.exists(file.path(dir, "SampleA.strprofiler.20260102.03_04_05.csv")))
-    expect_true(file.exists(file.path(dir, "strprofiler.20260102.03_04_05.log")))
+    expect_true(file.exists(file.path(dir, "full_summary.STRprofilerR.20260102.03_04_05.csv")))
+    expect_true(file.exists(file.path(dir, "SampleA.STRprofilerR.20260102.03_04_05.csv")))
+    expect_true(file.exists(file.path(dir, "STRprofilerR.20260102.03_04_05.log")))
 })
 
 test_that("the per-sample table leads with the query and lists every reference", {
@@ -139,7 +139,7 @@ test_that("file names are sanitised but sample names are not", {
     dir <- withr::local_tempdir()
     written <- writeSTRResults(cmp, dir, formats = "csv")
 
-    expect_true(any(grepl("HT-29_P3.strprofiler", basename(written), fixed = TRUE)))
+    expect_true(any(grepl("HT-29_P3.STRprofilerR", basename(written), fixed = TRUE)))
     expect_identical(read.csv(written[["HT-29/P3"]])$Sample[[1L]], "HT-29/P3")
 })
 

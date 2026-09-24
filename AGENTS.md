@@ -25,7 +25,7 @@ R/clastr.R                CLASTR REST client + JSON parser
 R/app.R                   STRprofilerApp(), page chrome, .appTry() error/warning plumbing
 R/app-{single,batch,database}.R  Shiny modules, one per tab
 R/app-tables.R            non-reactive table building for the app (unit-testable)
-exec/strprofiler.R        Rapp CLI (compare / clastr / app)
+exec/STRprofilerR.R        Rapp CLI (compare / clastr / app)
 inst/extdata/             example profiles, databases, a recorded CLASTR response
 inst/app/                 app usage guide (help.md) and www/ images
 ```
@@ -67,7 +67,7 @@ argument (`db`) is shadowed by it.
 
 ### The Rapp CLI
 
-`exec/strprofiler.R` is a [Rapp](https://github.com/r-lib/Rapp) app. Three things
+`exec/STRprofilerR.R` is a [Rapp](https://github.com/r-lib/Rapp) app. Three things
 that are easy to get wrong:
 
 - A bare `x <- NULL` at the top level of a `switch()` branch declares a
@@ -80,7 +80,7 @@ that are easy to get wrong:
 - `exec/` is not under `inst/`, so `system.file("exec", ...)` only resolves once
   the package is installed -- tests fall back to a relative path.
 
-Drive it in development with `Rapp::run("exec/strprofiler.R", c("compare", "--help"))`;
+Drive it in development with `Rapp::run("exec/STRprofilerR.R", c("compare", "--help"))`;
 `library(STRprofilerR)` at the top means the package must be installed first.
 
 ### Key R Commands

@@ -21,7 +21,9 @@ Useful links:
 ## Author
 
 **Maintainer**: Jared Andrews <jared.andrews07@gmail.com>
+([ORCID](https://orcid.org/0000-0002-0780-6248))
 
 Authors:
 
 - Jared Andrews <jared.andrews07@gmail.com>
+  ([ORCID](https://orcid.org/0000-0002-0780-6248))

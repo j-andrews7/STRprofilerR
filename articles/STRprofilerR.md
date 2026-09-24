@@ -312,19 +312,20 @@ It is worth checking flagged samples more closely.
 ## Writing results
 
 [`writeSTRResults()`](https://j-andrews7.github.io/STRprofilerR/reference/writeSTRResults.md)
-produces the file set the Python command line tool does:
+produces the file set the Python command line tool does, prefixed
+`STRprofilerR` rather than `strprofiler`:
 
 ``` r
 
-outDir <- file.path(tempdir(), "strprofiler-vignette")
+outDir <- file.path(tempdir(), "STRprofilerR-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.strprofiler.20260924.19_21_26.csv" 
-#> [2] "SampleA.strprofiler.20260924.19_21_26.csv"      
-#> [3] "SampleB.strprofiler.20260924.19_21_26.csv"      
-#> [4] "full_summary.strprofiler.20260924.19_21_26.html"
-#> [5] "strprofiler.20260924.19_21_26.log"
+#> [1] "full_summary.STRprofilerR.20260924.19_58_17.csv" 
+#> [2] "SampleA.STRprofilerR.20260924.19_58_17.csv"      
+#> [3] "SampleB.STRprofilerR.20260924.19_58_17.csv"      
+#> [4] "full_summary.STRprofilerR.20260924.19_58_17.html"
+#> [5] "STRprofilerR.20260924.19_58_17.log"
 ```
 
 That is a summary table, one table per query listing every reference it

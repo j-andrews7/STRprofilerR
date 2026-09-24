@@ -111,7 +111,7 @@ alleles(p)[["marker1"]]
 #> [[1]] 12 14
 #> [[2]] 12 14
 provenance(p)$timestamp
-#> [1] "2026-09-24 19:21:13 UTC"
+#> [1] "2026-09-24 19:58:07 UTC"
 
 # Correct a marker classification by hand.
 markerData(p)$class[markers(p) == "marker1"] <- "y-linked"

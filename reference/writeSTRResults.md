@@ -15,7 +15,7 @@ writeSTRResults(
   formats = c("csv", "html"),
   perSample = TRUE,
   timestamp = Sys.time(),
-  prefix = "strprofiler"
+  prefix = "STRprofilerR"
 )
 ```
 
@@ -55,29 +55,32 @@ Invisibly, a named character vector of the paths written.
 
 ## Details
 
+Files are named with an `STRprofilerR` prefix where the Python package
+uses `strprofiler`, so results from the two are distinguishable.
+
 Written into `dir`, with `<stamp>` a `YYYYMMDD.HH_MM_SS` timestamp:
 
-- `full_summary.strprofiler.<stamp>.csv`:
+- `full_summary.STRprofilerR.<stamp>.csv`:
 
   One row per query: the mixing flag, top two hits, and every hit
   passing each threshold.
 
-- `<sample>.strprofiler.<stamp>.csv`:
+- `<sample>.STRprofilerR.<stamp>.csv`:
 
   One file per query, listing every reference it was compared against
   with the scores and that reference's alleles. The query itself is the
   first row.
 
-- `full_summary.strprofiler.<stamp>.html`:
+- `full_summary.STRprofilerR.<stamp>.html`:
 
   The summary as a browsable table.
 
-- `strprofiler.<stamp>.log`:
+- `STRprofilerR.<stamp>.log`:
 
   Parameters, input files, and package and R versions.
 
 Sample names are sanitised for use as file names, so a query called
-`HT-29/P3` is written as `HT-29_P3.strprofiler.<stamp>.csv`. The name
+`HT-29/P3` is written as `HT-29_P3.STRprofilerR.<stamp>.csv`. The name
 inside the file is untouched.
 
 The HTML is written with `DT` when `DT`, `htmlwidgets`, and `pandoc` are
@@ -107,12 +110,12 @@ ref <- readSTRProfiles(
     sampleCol = "Sample Name"
 )
 
-out <- file.path(tempdir(), "strprofiler-demo")
+out <- file.path(tempdir(), "STRprofilerR-demo")
 written <- writeSTRResults(compareProfiles(q, ref), out)
 basename(written)
-#> [1] "full_summary.strprofiler.20260924.19_21_21.csv" 
-#> [2] "SampleA.strprofiler.20260924.19_21_21.csv"      
-#> [3] "SampleB.strprofiler.20260924.19_21_21.csv"      
-#> [4] "full_summary.strprofiler.20260924.19_21_21.html"
-#> [5] "strprofiler.20260924.19_21_21.log"              
+#> [1] "full_summary.STRprofilerR.20260924.19_58_13.csv" 
+#> [2] "SampleA.STRprofilerR.20260924.19_58_13.csv"      
+#> [3] "SampleB.STRprofilerR.20260924.19_58_13.csv"      
+#> [4] "full_summary.STRprofilerR.20260924.19_58_13.html"
+#> [5] "STRprofilerR.20260924.19_58_13.log"              
 ```

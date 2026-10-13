@@ -16,9 +16,18 @@ an R port of the
 **STRprofilerR is intended for research purposes only.** A low score is
 a prompt to investigate, not a verdict.
 
+## Installation
+
+You can install **STRprofilerR** from Bioconductor with:
+
 ``` r
 
-library(STRprofilerR)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("STRprofilerR")
+
+# You can install the development version from Github
+pak::pak("j-andrews7/STRprofilerR")
 ```
 
 ## Reading profiles
@@ -31,6 +40,7 @@ marker:
 
 ``` r
 
+library(STRprofilerR)
 longFile <- system.file("extdata", "ExampleSTR_long.csv", package = "STRprofilerR")
 head(read.csv(longFile, check.names = FALSE))
 #>   Sample Name marker1  marker2 marker4 Penta D Penta E AMEL
@@ -138,7 +148,7 @@ markerData(profiles)
 ### Metadata
 
 Database files often carry non-marker columns. Name them in
-`metadataCols` and they fall in
+`metadataCols` and they end up in
 [`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md),
 ignored for scoring purposes:
 
@@ -160,6 +170,11 @@ head(sampleData(reference), 3)
 
 If using an existing database with extra sample metadata, be sure to set
 this so those columns aren’t used in scoring.
+
+This file is the database the Shiny application uses by default:
+profiles of patient-derived models from The Jackson Laboratory PDX
+program and the NCI Patient-Derived Models Repository. It’s also
+provided as the `pdxSTRProfiles` dataset used [below](#workflow).
 
 ## Scoring
 
@@ -321,11 +336,11 @@ outDir <- file.path(tempdir(), "STRprofilerR-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.STRprofilerR.20260924.19_58_17.csv" 
-#> [2] "SampleA.STRprofilerR.20260924.19_58_17.csv"      
-#> [3] "SampleB.STRprofilerR.20260924.19_58_17.csv"      
-#> [4] "full_summary.STRprofilerR.20260924.19_58_17.html"
-#> [5] "STRprofilerR.20260924.19_58_17.log"
+#> [1] "full_summary.STRprofilerR.20261013.19_02_13.csv" 
+#> [2] "SampleA.STRprofilerR.20261013.19_02_13.csv"      
+#> [3] "SampleB.STRprofilerR.20261013.19_02_13.csv"      
+#> [4] "full_summary.STRprofilerR.20261013.19_02_13.html"
+#> [5] "STRprofilerR.20261013.19_02_13.log"
 ```
 
 That is a summary table, one table per query listing every reference it
@@ -391,7 +406,9 @@ strprofilerr compare --help
 
 Flags mirror the Python CLI, and both spellings are accepted, so
 `--sample-col` and `--sample_col` both work and existing invocations
-keep running. \# The Shiny application
+keep running.
+
+## The Shiny application
 
 For colleagues who would rather not write code,
 [`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
@@ -421,7 +438,181 @@ The application has four tabs:
 From a shell, `strprofilerr app --database our_database.csv` does the
 same. To host the application for others, deploy an `app.R` that calls
 [`STRprofilerR::STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
-with your database.
+with your database. One ships with the package, at
+`system.file("app", "app.R", package = "STRprofilerR")`.
+
+## STRprofilerR in a larger workflow
+
+STR authentication is rarely an end in itself. It is a quality control
+step that decides which models go on into experiments, and its results
+belong with the data those experiments produce.
+
+### Bioconductor data structures
+
+`STRProfiles` is built from
+*[S4Vectors](https://bioconductor.org/packages/3.23/S4Vectors)* and
+*[IRanges](https://bioconductor.org/packages/3.23/IRanges)* classes
+rather than bespoke ones.
+[`sampleData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md),
+[`markerData()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles-accessors.md),
+[`scores()`](https://j-andrews7.github.io/STRprofilerR/reference/STRComparison-accessors.md),
+and [`summary()`](https://rdrr.io/r/base/summary.html) all return
+`DataFrame`s, and each marker’s alleles are a `CharacterList`, so the
+usual Bioconductor idioms for subsetting, merging, and list-wise
+operations apply. Counting the alleles each sample carries at a marker,
+for instance:
+
+``` r
+
+lengths(alleles(batch)[["D5S818"]])
+#> [1] 2 3 1
+```
+
+### The bundled PDX database
+
+`pdxSTRProfiles` holds 1,258 STR profiles from The Jackson Laboratory
+PDX program and the NCI Patient-Derived Models Repository, ready to use
+as a reference:
+
+``` r
+
+data(pdxSTRProfiles)
+pdxSTRProfiles
+#> class: STRProfiles
+#> samples(1258): J000077451 J000077591 ... K98450 SA0426
+#> markers(18): Amelogenin CSF1PO ... PentaE PentaD
+#> sampleData(3): Center Passage nDroppedCalls
+#> markerClass: amelogenin(1) autosomal(17)
+#> source(1): main_database.csv
+
+pdxCmp <- compareProfiles(batch, pdxSTRProfiles)
+as.data.frame(summary(pdxCmp))[, c("Sample", "mixed", "topHit", "nextBest")]
+#>            Sample mixed             topHit      nextBest
+#> Sample_A Sample_A FALSE J000077451: 100.00 957936: 57.14
+#> Sample_B Sample_B FALSE  J000077960: 85.71 193399: 76.00
+#> Sample_C Sample_C FALSE J000078366: 100.00 137432: 57.14
+```
+
+### Generating profiles from raw data
+
+[`STRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles.md)
+provides the ability to build profiles a `data.frame` already in memory,
+such as the result of a LIMS query, an instrument export after some
+reshaping, or STR calls made from sequencing data by another tool. It
+needs one row per sample and one column per marker, and need not cover
+the full panel:
+
+``` r
+
+calls <- data.frame(
+    Sample = "PDX_042",
+    Amelogenin = "X", CSF1PO = "11", D13S317 = "9,14", D16S539 = "12",
+    D18S51 = "17", D21S11 = "29,31", D3S1358 = "15", D5S818 = "11",
+    D7S820 = "9,11", D8S1179 = "13,15", FGA = "21,22", TH01 = "9.3",
+    TPOX = "8", vWA = "14"
+)
+newModel <- STRProfiles(calls)
+
+scoreProfiles(newModel, pdxSTRProfiles, minScore = 80)
+#> DataFrame with 1 row and 9 columns
+#>         query   reference nSharedMarkers nSharedAlleles nQueryAlleles
+#>   <character> <character>      <integer>      <integer>     <integer>
+#> 1     PDX_042  J000078366             13             18            18
+#>   nReferenceAlleles tanabeScore mastersQueryScore mastersRefScore
+#>           <integer>   <numeric>         <numeric>       <numeric>
+#> 1                18         100               100             100
+```
+
+### Carrying authentication info with an experiment
+
+Generally, authentication is frequently performed prior to larger
+experiments, and these profiles may be worth carrying along with said
+assay data. Recording each sample’s authentication result in the
+`colData` of its
+*[SummarizedExperiment](https://bioconductor.org/packages/3.23/SummarizedExperiment)*
+keeps the quality control with the data, so it survives subsetting and
+goes wherever the object goes. The same applies to the `colData` of a
+`SingleCellExperiment` or `MultiAssayExperiment`.
+
+In this example, the experiment’s sample sheet records which model each
+sample should be, and `Sample_C` has been swapped:
+
+``` r
+
+library(SummarizedExperiment)
+
+# A stand-in for an experiment on the three models in the batch.
+counts <- matrix(
+    rpois(30, lambda = 50),
+    nrow = 10,
+    dimnames = list(paste0("gene", 1:10), rownames(batch))
+)
+
+se <- SummarizedExperiment(
+    assays = list(counts = counts),
+    colData = DataFrame(
+        model = c("J000077451", "J000077960", "J000077451"),
+        row.names = rownames(batch)
+    )
+)
+
+# Each sample's best match in the reference.
+pairs <- scores(pdxCmp)
+pairs <- pairs[order(pairs$query, -pairs$tanabeScore), ]
+best <- pairs[!duplicated(pairs$query), ]
+best <- best[match(colnames(se), best$query), ]
+
+se$strMatch <- best$reference
+se$strTanabe <- best$tanabeScore
+se$strMixed <- summary(pdxCmp)[colnames(se), "mixed"]
+se$authenticated <- se$strMatch == se$model & se$strTanabe >= 80 & !se$strMixed
+colData(se)
+#> DataFrame with 3 rows and 5 columns
+#>                model    strMatch strTanabe  strMixed authenticated
+#>          <character> <character> <numeric> <logical>     <logical>
+#> Sample_A  J000077451  J000077451  100.0000     FALSE          TRUE
+#> Sample_B  J000077960  J000077960   85.7143     FALSE          TRUE
+#> Sample_C  J000077451  J000078366  100.0000     FALSE         FALSE
+
+# Keep only authenticated samples for analysis.
+se[, se$authenticated]
+#> class: SummarizedExperiment 
+#> dim: 10 2 
+#> metadata(0):
+#> assays(1): counts
+#> rownames(10): gene1 gene2 ... gene9 gene10
+#> rowData names(0):
+#> colnames(2): Sample_A Sample_B
+#> colData names(5): model strMatch strTanabe strMixed authenticated
+```
+
+### Maintaining a reference database
+
+Once a new model is authenticated, its profile could become a reference
+for the next batch. [`c()`](https://rdrr.io/r/base/c.html) combines
+`STRProfiles` objects, taking the union of their markers, and
+[`writeSTRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/writeSTRProfiles.md)
+writes a file that
+[`readSTRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/readSTRProfiles.md),
+the command line application’s `--database`, and
+[`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
+can all read:
+
+``` r
+
+inHouse <- c(pdxSTRProfiles, newModel)
+inHouse
+#> class: STRProfiles
+#> samples(1259): J000077451 J000077591 ... SA0426 PDX_042
+#> markers(18): Amelogenin CSF1PO ... PentaE PentaD
+#> sampleData(3): Center Passage nDroppedCalls
+#> markerClass: amelogenin(1) autosomal(17)
+#> source(1): main_database.csv
+
+writeSTRProfiles(inHouse, file.path(tempdir(), "in_house_database.csv"))
+```
+
+This makes updating a reference database straightforward.
 
 ## Session info
 
@@ -446,26 +637,32 @@ sessionInfo()
 #> tzcode source: system (glibc)
 #> 
 #> attached base packages:
-#> [1] stats     graphics  grDevices utils     datasets  methods   base     
+#> [1] stats4    stats     graphics  grDevices utils     datasets  methods  
+#> [8] base     
 #> 
 #> other attached packages:
-#> [1] STRprofilerR_0.99.0 BiocStyle_2.40.0   
+#>  [1] SummarizedExperiment_1.42.0 Biobase_2.72.0             
+#>  [3] GenomicRanges_1.64.0        Seqinfo_1.2.0              
+#>  [5] IRanges_2.46.0              S4Vectors_0.50.3           
+#>  [7] BiocGenerics_0.58.1         generics_0.1.4             
+#>  [9] MatrixGenerics_1.24.0       matrixStats_1.5.0          
+#> [11] STRprofilerR_0.99.0         BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] Matrix_1.7-5        jsonlite_2.0.0      compiler_4.6.1     
-#>  [4] BiocManager_1.30.27 jquerylib_0.1.4     systemfonts_1.3.2  
-#>  [7] IRanges_2.46.0      textshaping_1.0.5   yaml_2.3.12        
-#> [10] fastmap_1.2.0       readxl_1.5.0.1      lattice_0.22-9     
-#> [13] R6_2.6.1            generics_0.1.4      knitr_1.52         
-#> [16] BiocGenerics_0.58.1 htmlwidgets_1.6.4   tibble_3.3.1       
-#> [19] bookdown_0.48       desc_1.4.3          bslib_0.12.0       
-#> [22] pillar_1.11.1       rlang_1.3.0         DT_0.34.0          
-#> [25] cachem_1.1.0        xfun_0.61           fs_2.1.0           
-#> [28] sass_0.4.10         otel_0.2.0          cli_3.6.6          
-#> [31] pkgdown_2.2.1       magrittr_2.0.5      crosstalk_1.2.2    
-#> [34] grid_4.6.1          digest_0.6.39       lifecycle_1.0.5    
-#> [37] S4Vectors_0.50.3    vctrs_0.7.3         evaluate_1.0.5     
-#> [40] glue_1.8.1          cellranger_1.1.0    ragg_1.5.2         
-#> [43] stats4_4.6.1        rmarkdown_2.32      tools_4.6.1        
-#> [46] pkgconfig_2.0.3     htmltools_0.5.9
+#>  [1] sass_0.4.10         SparseArray_1.12.3  lattice_0.22-9     
+#>  [4] digest_0.6.39       magrittr_2.0.5      evaluate_1.0.5     
+#>  [7] grid_4.6.1          bookdown_0.48       fastmap_1.2.0      
+#> [10] cellranger_1.1.0    jsonlite_2.0.0      Matrix_1.7-5       
+#> [13] BiocManager_1.30.27 crosstalk_1.2.2     textshaping_1.0.5  
+#> [16] jquerylib_0.1.4     abind_1.4-8         cli_3.6.6          
+#> [19] rlang_1.3.0         XVector_0.52.0      cachem_1.1.0       
+#> [22] DelayedArray_0.38.2 yaml_2.3.12         otel_0.2.0         
+#> [25] S4Arrays_1.12.1     tools_4.6.1         DT_0.34.0          
+#> [28] vctrs_0.7.3         R6_2.6.1            lifecycle_1.0.5    
+#> [31] fs_2.1.0            htmlwidgets_1.6.4   ragg_1.5.2         
+#> [34] pkgconfig_2.0.3     desc_1.4.3          pkgdown_2.2.1      
+#> [37] bslib_0.12.0        pillar_1.11.1       glue_1.8.1         
+#> [40] systemfonts_1.3.2   xfun_0.61           tibble_3.3.1       
+#> [43] knitr_1.52          htmltools_0.5.9     rmarkdown_2.32     
+#> [46] compiler_4.6.1      readxl_1.5.0.1
 ```

@@ -92,6 +92,11 @@ Harmonising and classifying marker names.
 - [`STRprofilerApp()`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerApp.md)
   : Launch the STRprofiler Shiny application
 
+## Data
+
+- [`pdxSTRProfiles`](https://j-andrews7.github.io/STRprofilerR/reference/pdxSTRProfiles.md)
+  : STR profiles of patient-derived models from JAX and the NCI PDMR
+
 ## Package
 
 - [`STRprofilerR`](https://j-andrews7.github.io/STRprofilerR/reference/STRprofilerR-package.md)

@@ -54,7 +54,7 @@
                         <h4 data-toc-skip class="author">Jared
 Andrews</h4>
             
-            <h4 data-toc-skip class="date">2026-09-24</h4>
+            <h4 data-toc-skip class="date">2026-10-13</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/j-andrews7/STRprofilerR/blob/devel/vignettes/STRprofilerR.Rmd" class="external-link"><code>vignettes/STRprofilerR.Rmd</code></a></small>
       <div class="d-none name"><code>STRprofilerR.Rmd</code></div>
@@ -76,8 +76,19 @@ match. It is an R port of the <a href="https://github.com/j-andrews7/STRprofiler
 package.</p>
 <p><strong>STRprofilerR is intended for research purposes only.</strong>
 A low score is a prompt to investigate, not a verdict.</p>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install <strong>STRprofilerR</strong> from Bioconductor
+with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/j-andrews7/STRprofilerR" class="external-link">STRprofilerR</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"STRprofilerR"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># You can install the development version from Github</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"j-andrews7/STRprofilerR"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="reading-profiles">Reading profiles<a class="anchor" aria-label="anchor" href="#reading-profiles"></a>
@@ -87,7 +98,8 @@ facility/platform), and <code><a href="../reference/readSTRProfiles.html">readST
 <strong>long</strong> file has one row per sample and one column per
 marker:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">longFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_long.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/j-andrews7/STRprofilerR" class="external-link">STRprofilerR</a></span><span class="op">)</span></span>
+<span><span class="va">longFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"ExampleSTR_long.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">longFile</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   Sample Name marker1  marker2 marker4 Penta D Penta E AMEL</span></span>
 <span><span class="co">#&gt; 1     SampleA  12, 14       12   13,13    9,10   12,14    X</span></span>
@@ -172,7 +184,7 @@ found without you having to name the column:</p>
 <h3 id="metadata">Metadata<a class="anchor" aria-label="anchor" href="#metadata"></a>
 </h3>
 <p>Database files often carry non-marker columns. Name them in
-<code>metadataCols</code> and they fall in <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code>,
+<code>metadataCols</code> and they end up in <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code>,
 ignored for scoring purposes:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dbFile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"main_database.csv"</span>, package <span class="op">=</span> <span class="st">"STRprofilerR"</span><span class="op">)</span></span>
@@ -189,6 +201,10 @@ ignored for scoring purposes:</p>
 <span><span class="co">#&gt; J000077608         JAX          P0             0</span></span></code></pre></div>
 <p>If using an existing database with extra sample metadata, be sure to
 set this so those columns aren’t used in scoring.</p>
+<p>This file is the database the Shiny application uses by default:
+profiles of patient-derived models from The Jackson Laboratory PDX
+program and the NCI Patient-Derived Models Repository. It’s also
+provided as the <code>pdxSTRProfiles</code> dataset used <a href="#workflow">below</a>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -334,11 +350,11 @@ command line tool does, prefixed <code>STRprofilerR</code> rather than
 <span><span class="va">written</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/writeSTRResults.html">writeSTRResults</a></span><span class="op">(</span><span class="va">cmp</span>, <span class="va">outDir</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">written</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "full_summary.STRprofilerR.20260924.19_58_17.csv" </span></span>
-<span><span class="co">#&gt; [2] "SampleA.STRprofilerR.20260924.19_58_17.csv"      </span></span>
-<span><span class="co">#&gt; [3] "SampleB.STRprofilerR.20260924.19_58_17.csv"      </span></span>
-<span><span class="co">#&gt; [4] "full_summary.STRprofilerR.20260924.19_58_17.html"</span></span>
-<span><span class="co">#&gt; [5] "STRprofilerR.20260924.19_58_17.log"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "full_summary.STRprofilerR.20261013.19_02_13.csv" </span></span>
+<span><span class="co">#&gt; [2] "SampleA.STRprofilerR.20261013.19_02_13.csv"      </span></span>
+<span><span class="co">#&gt; [3] "SampleB.STRprofilerR.20261013.19_02_13.csv"      </span></span>
+<span><span class="co">#&gt; [4] "full_summary.STRprofilerR.20261013.19_02_13.html"</span></span>
+<span><span class="co">#&gt; [5] "STRprofilerR.20261013.19_02_13.log"</span></span></code></pre></div>
 <p>That is a summary table, one table per query listing every reference
 it was compared against with that reference’s alleles, a self-contained
 HTML view of the summary, and a log recording the parameters, inputs,
@@ -388,7 +404,11 @@ Install the launcher once:</p>
 <span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a><span class="ex">strprofilerr</span> compare <span class="at">--help</span></span></code></pre></div>
 <p>Flags mirror the Python CLI, and both spellings are accepted, so
 <code>--sample-col</code> and <code>--sample_col</code> both work and
-existing invocations keep running. # The Shiny application</p>
+existing invocations keep running.</p>
+</div>
+<div class="section level2">
+<h2 id="the-shiny-application">The Shiny application<a class="anchor" aria-label="anchor" href="#the-shiny-application"></a>
+</h2>
 <p>For colleagues who would rather not write code,
 <code><a href="../reference/STRprofilerApp.html">STRprofilerApp()</a></code> serves the same comparisons in a web
 browser. It is a port of the <code>strprofiler</code> Python package’s
@@ -418,13 +438,170 @@ cite.</li>
 <p>From a shell,
 <code>strprofilerr app --database our_database.csv</code> does the same.
 To host the application for others, deploy an <code>app.R</code> that
-calls <code><a href="../reference/STRprofilerApp.html">STRprofilerR::STRprofilerApp()</a></code> with your
-database.</p>
+calls <code><a href="../reference/STRprofilerApp.html">STRprofilerR::STRprofilerApp()</a></code> with your database.
+One ships with the package, at
+<code>system.file("app", "app.R", package = "STRprofilerR")</code>.</p>
+</div>
+<div class="section level2">
+<h2 id="workflow">STRprofilerR in a larger workflow<a class="anchor" aria-label="anchor" href="#workflow"></a>
+</h2>
+<p>STR authentication is rarely an end in itself. It is a quality
+control step that decides which models go on into experiments, and its
+results belong with the data those experiments produce.</p>
+<div class="section level3">
+<h3 id="bioconductor-data-structures">Bioconductor data structures<a class="anchor" aria-label="anchor" href="#bioconductor-data-structures"></a>
+</h3>
+<p><code>STRProfiles</code> is built from <em><a href="https://bioconductor.org/packages/3.23/S4Vectors" class="external-link">S4Vectors</a></em>
+and <em><a href="https://bioconductor.org/packages/3.23/IRanges" class="external-link">IRanges</a></em>
+classes rather than bespoke ones. <code><a href="../reference/STRProfiles-accessors.html">sampleData()</a></code>,
+<code><a href="../reference/STRProfiles-accessors.html">markerData()</a></code>, <code><a href="../reference/STRComparison-accessors.html">scores()</a></code>, and
+<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> all return <code>DataFrame</code>s, and each
+marker’s alleles are a <code>CharacterList</code>, so the usual
+Bioconductor idioms for subsetting, merging, and list-wise operations
+apply. Counting the alleles each sample carries at a marker, for
+instance:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="../reference/STRProfiles-accessors.html">alleles</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span><span class="op">[[</span><span class="st">"D5S818"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 2 3 1</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="the-bundled-pdx-database">The bundled PDX database<a class="anchor" aria-label="anchor" href="#the-bundled-pdx-database"></a>
+</h3>
+<p><code>pdxSTRProfiles</code> holds 1,258 STR profiles from The Jackson
+Laboratory PDX program and the NCI Patient-Derived Models Repository,
+ready to use as a reference:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">pdxSTRProfiles</span><span class="op">)</span></span>
+<span><span class="va">pdxSTRProfiles</span></span>
+<span><span class="co">#&gt; class: STRProfiles</span></span>
+<span><span class="co">#&gt; samples(1258): J000077451 J000077591 ... K98450 SA0426</span></span>
+<span><span class="co">#&gt; markers(18): Amelogenin CSF1PO ... PentaE PentaD</span></span>
+<span><span class="co">#&gt; sampleData(3): Center Passage nDroppedCalls</span></span>
+<span><span class="co">#&gt; markerClass: amelogenin(1) autosomal(17)</span></span>
+<span><span class="co">#&gt; source(1): main_database.csv</span></span>
+<span></span>
+<span><span class="va">pdxCmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compareProfiles.html">compareProfiles</a></span><span class="op">(</span><span class="va">batch</span>, <span class="va">pdxSTRProfiles</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pdxCmp</span><span class="op">)</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sample"</span>, <span class="st">"mixed"</span>, <span class="st">"topHit"</span>, <span class="st">"nextBest"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;            Sample mixed             topHit      nextBest</span></span>
+<span><span class="co">#&gt; Sample_A Sample_A FALSE J000077451: 100.00 957936: 57.14</span></span>
+<span><span class="co">#&gt; Sample_B Sample_B FALSE  J000077960: 85.71 193399: 76.00</span></span>
+<span><span class="co">#&gt; Sample_C Sample_C FALSE J000078366: 100.00 137432: 57.14</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="generating-profiles-from-raw-data">Generating profiles from raw data<a class="anchor" aria-label="anchor" href="#generating-profiles-from-raw-data"></a>
+</h3>
+<p><code><a href="../reference/STRProfiles.html">STRProfiles()</a></code> provides the ability to build profiles a
+<code>data.frame</code> already in memory, such as the result of a LIMS
+query, an instrument export after some reshaping, or STR calls made from
+sequencing data by another tool. It needs one row per sample and one
+column per marker, and need not cover the full panel:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">calls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    Sample <span class="op">=</span> <span class="st">"PDX_042"</span>,</span>
+<span>    Amelogenin <span class="op">=</span> <span class="st">"X"</span>, CSF1PO <span class="op">=</span> <span class="st">"11"</span>, D13S317 <span class="op">=</span> <span class="st">"9,14"</span>, D16S539 <span class="op">=</span> <span class="st">"12"</span>,</span>
+<span>    D18S51 <span class="op">=</span> <span class="st">"17"</span>, D21S11 <span class="op">=</span> <span class="st">"29,31"</span>, D3S1358 <span class="op">=</span> <span class="st">"15"</span>, D5S818 <span class="op">=</span> <span class="st">"11"</span>,</span>
+<span>    D7S820 <span class="op">=</span> <span class="st">"9,11"</span>, D8S1179 <span class="op">=</span> <span class="st">"13,15"</span>, FGA <span class="op">=</span> <span class="st">"21,22"</span>, TH01 <span class="op">=</span> <span class="st">"9.3"</span>,</span>
+<span>    TPOX <span class="op">=</span> <span class="st">"8"</span>, vWA <span class="op">=</span> <span class="st">"14"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">newModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/STRProfiles.html">STRProfiles</a></span><span class="op">(</span><span class="va">calls</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/scoreProfiles.html">scoreProfiles</a></span><span class="op">(</span><span class="va">newModel</span>, <span class="va">pdxSTRProfiles</span>, minScore <span class="op">=</span> <span class="fl">80</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 1 row and 9 columns</span></span>
+<span><span class="co">#&gt;         query   reference nSharedMarkers nSharedAlleles nQueryAlleles</span></span>
+<span><span class="co">#&gt;   &lt;character&gt; &lt;character&gt;      &lt;integer&gt;      &lt;integer&gt;     &lt;integer&gt;</span></span>
+<span><span class="co">#&gt; 1     PDX_042  J000078366             13             18            18</span></span>
+<span><span class="co">#&gt;   nReferenceAlleles tanabeScore mastersQueryScore mastersRefScore</span></span>
+<span><span class="co">#&gt;           &lt;integer&gt;   &lt;numeric&gt;         &lt;numeric&gt;       &lt;numeric&gt;</span></span>
+<span><span class="co">#&gt; 1                18         100               100             100</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="carrying-authentication-info-with-an-experiment">Carrying authentication info with an experiment<a class="anchor" aria-label="anchor" href="#carrying-authentication-info-with-an-experiment"></a>
+</h3>
+<p>Generally, authentication is frequently performed prior to larger
+experiments, and these profiles may be worth carrying along with said
+assay data. Recording each sample’s authentication result in the
+<code>colData</code> of its <em><a href="https://bioconductor.org/packages/3.23/SummarizedExperiment" class="external-link">SummarizedExperiment</a></em>
+keeps the quality control with the data, so it survives subsetting and
+goes wherever the object goes. The same applies to the
+<code>colData</code> of a <code>SingleCellExperiment</code> or
+<code>MultiAssayExperiment</code>.</p>
+<p>In this example, the experiment’s sample sheet records which model
+each sample should be, and <code>Sample_C</code> has been swapped:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bioconductor.org/packages/SummarizedExperiment" class="external-link">SummarizedExperiment</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># A stand-in for an experiment on the three models in the batch.</span></span>
+<span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/Poisson.html" class="external-link">rpois</a></span><span class="op">(</span><span class="fl">30</span>, lambda <span class="op">=</span> <span class="fl">50</span><span class="op">)</span>,</span>
+<span>    nrow <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>    dimnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"gene"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">SummarizedExperiment</a></span><span class="op">(</span></span>
+<span>    assays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">counts</span><span class="op">)</span>,</span>
+<span>    colData <span class="op">=</span> <span class="fu">DataFrame</span><span class="op">(</span></span>
+<span>        model <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"J000077451"</span>, <span class="st">"J000077960"</span>, <span class="st">"J000077451"</span><span class="op">)</span>,</span>
+<span>        row.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">batch</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Each sample's best match in the reference.</span></span>
+<span><span class="va">pairs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/STRComparison-accessors.html">scores</a></span><span class="op">(</span><span class="va">pdxCmp</span><span class="op">)</span></span>
+<span><span class="va">pairs</span> <span class="op">&lt;-</span> <span class="va">pairs</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">pairs</span><span class="op">$</span><span class="va">query</span>, <span class="op">-</span><span class="va">pairs</span><span class="op">$</span><span class="va">tanabeScore</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">best</span> <span class="op">&lt;-</span> <span class="va">pairs</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">pairs</span><span class="op">$</span><span class="va">query</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">best</span> <span class="op">&lt;-</span> <span class="va">best</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span>, <span class="va">best</span><span class="op">$</span><span class="va">query</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="va">se</span><span class="op">$</span><span class="va">strMatch</span> <span class="op">&lt;-</span> <span class="va">best</span><span class="op">$</span><span class="va">reference</span></span>
+<span><span class="va">se</span><span class="op">$</span><span class="va">strTanabe</span> <span class="op">&lt;-</span> <span class="va">best</span><span class="op">$</span><span class="va">tanabeScore</span></span>
+<span><span class="va">se</span><span class="op">$</span><span class="va">strMixed</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">pdxCmp</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span>, <span class="st">"mixed"</span><span class="op">]</span></span>
+<span><span class="va">se</span><span class="op">$</span><span class="va">authenticated</span> <span class="op">&lt;-</span> <span class="va">se</span><span class="op">$</span><span class="va">strMatch</span> <span class="op">==</span> <span class="va">se</span><span class="op">$</span><span class="va">model</span> <span class="op">&amp;</span> <span class="va">se</span><span class="op">$</span><span class="va">strTanabe</span> <span class="op">&gt;=</span> <span class="fl">80</span> <span class="op">&amp;</span> <span class="op">!</span><span class="va">se</span><span class="op">$</span><span class="va">strMixed</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">colData</a></span><span class="op">(</span><span class="va">se</span><span class="op">)</span></span>
+<span><span class="co">#&gt; DataFrame with 3 rows and 5 columns</span></span>
+<span><span class="co">#&gt;                model    strMatch strTanabe  strMixed authenticated</span></span>
+<span><span class="co">#&gt;          &lt;character&gt; &lt;character&gt; &lt;numeric&gt; &lt;logical&gt;     &lt;logical&gt;</span></span>
+<span><span class="co">#&gt; Sample_A  J000077451  J000077451  100.0000     FALSE          TRUE</span></span>
+<span><span class="co">#&gt; Sample_B  J000077960  J000077960   85.7143     FALSE          TRUE</span></span>
+<span><span class="co">#&gt; Sample_C  J000077451  J000078366  100.0000     FALSE         FALSE</span></span>
+<span></span>
+<span><span class="co"># Keep only authenticated samples for analysis.</span></span>
+<span><span class="va">se</span><span class="op">[</span>, <span class="va">se</span><span class="op">$</span><span class="va">authenticated</span><span class="op">]</span></span>
+<span><span class="co">#&gt; class: SummarizedExperiment </span></span>
+<span><span class="co">#&gt; dim: 10 2 </span></span>
+<span><span class="co">#&gt; metadata(0):</span></span>
+<span><span class="co">#&gt; assays(1): counts</span></span>
+<span><span class="co">#&gt; rownames(10): gene1 gene2 ... gene9 gene10</span></span>
+<span><span class="co">#&gt; rowData names(0):</span></span>
+<span><span class="co">#&gt; colnames(2): Sample_A Sample_B</span></span>
+<span><span class="co">#&gt; colData names(5): model strMatch strTanabe strMixed authenticated</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="maintaining-a-reference-database">Maintaining a reference database<a class="anchor" aria-label="anchor" href="#maintaining-a-reference-database"></a>
+</h3>
+<p>Once a new model is authenticated, its profile could become a
+reference for the next batch. <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code> combines
+<code>STRProfiles</code> objects, taking the union of their markers, and
+<code><a href="../reference/writeSTRProfiles.html">writeSTRProfiles()</a></code> writes a file that
+<code><a href="../reference/readSTRProfiles.html">readSTRProfiles()</a></code>, the command line application’s
+<code>--database</code>, and <code><a href="../reference/STRprofilerApp.html">STRprofilerApp()</a></code> can all
+read:</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">inHouse</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">pdxSTRProfiles</span>, <span class="va">newModel</span><span class="op">)</span></span>
+<span><span class="va">inHouse</span></span>
+<span><span class="co">#&gt; class: STRProfiles</span></span>
+<span><span class="co">#&gt; samples(1259): J000077451 J000077591 ... SA0426 PDX_042</span></span>
+<span><span class="co">#&gt; markers(18): Amelogenin CSF1PO ... PentaE PentaD</span></span>
+<span><span class="co">#&gt; sampleData(3): Center Passage nDroppedCalls</span></span>
+<span><span class="co">#&gt; markerClass: amelogenin(1) autosomal(17)</span></span>
+<span><span class="co">#&gt; source(1): main_database.csv</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/writeSTRProfiles.html">writeSTRProfiles</a></span><span class="op">(</span><span class="va">inHouse</span>, <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"in_house_database.csv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>This makes updating a reference database straightforward.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; R version 4.6.1 (2026-06-24)</span></span>
 <span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
@@ -444,28 +621,34 @@ database.</p>
 <span><span class="co">#&gt; tzcode source: system (glibc)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; attached base packages:</span></span>
-<span><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">#&gt; [1] stats4    stats     graphics  grDevices utils     datasets  methods  </span></span>
+<span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt; [1] STRprofilerR_0.99.0 BiocStyle_2.40.0   </span></span>
+<span><span class="co">#&gt;  [1] SummarizedExperiment_1.42.0 Biobase_2.72.0             </span></span>
+<span><span class="co">#&gt;  [3] GenomicRanges_1.64.0        Seqinfo_1.2.0              </span></span>
+<span><span class="co">#&gt;  [5] IRanges_2.46.0              S4Vectors_0.50.3           </span></span>
+<span><span class="co">#&gt;  [7] BiocGenerics_0.58.1         generics_0.1.4             </span></span>
+<span><span class="co">#&gt;  [9] MatrixGenerics_1.24.0       matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [11] STRprofilerR_0.99.0         BiocStyle_2.40.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] Matrix_1.7-5        jsonlite_2.0.0      compiler_4.6.1     </span></span>
-<span><span class="co">#&gt;  [4] BiocManager_1.30.27 jquerylib_0.1.4     systemfonts_1.3.2  </span></span>
-<span><span class="co">#&gt;  [7] IRanges_2.46.0      textshaping_1.0.5   yaml_2.3.12        </span></span>
-<span><span class="co">#&gt; [10] fastmap_1.2.0       readxl_1.5.0.1      lattice_0.22-9     </span></span>
-<span><span class="co">#&gt; [13] R6_2.6.1            generics_0.1.4      knitr_1.52         </span></span>
-<span><span class="co">#&gt; [16] BiocGenerics_0.58.1 htmlwidgets_1.6.4   tibble_3.3.1       </span></span>
-<span><span class="co">#&gt; [19] bookdown_0.48       desc_1.4.3          bslib_0.12.0       </span></span>
-<span><span class="co">#&gt; [22] pillar_1.11.1       rlang_1.3.0         DT_0.34.0          </span></span>
-<span><span class="co">#&gt; [25] cachem_1.1.0        xfun_0.61           fs_2.1.0           </span></span>
-<span><span class="co">#&gt; [28] sass_0.4.10         otel_0.2.0          cli_3.6.6          </span></span>
-<span><span class="co">#&gt; [31] pkgdown_2.2.1       magrittr_2.0.5      crosstalk_1.2.2    </span></span>
-<span><span class="co">#&gt; [34] grid_4.6.1          digest_0.6.39       lifecycle_1.0.5    </span></span>
-<span><span class="co">#&gt; [37] S4Vectors_0.50.3    vctrs_0.7.3         evaluate_1.0.5     </span></span>
-<span><span class="co">#&gt; [40] glue_1.8.1          cellranger_1.1.0    ragg_1.5.2         </span></span>
-<span><span class="co">#&gt; [43] stats4_4.6.1        rmarkdown_2.32      tools_4.6.1        </span></span>
-<span><span class="co">#&gt; [46] pkgconfig_2.0.3     htmltools_0.5.9</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] sass_0.4.10         SparseArray_1.12.3  lattice_0.22-9     </span></span>
+<span><span class="co">#&gt;  [4] digest_0.6.39       magrittr_2.0.5      evaluate_1.0.5     </span></span>
+<span><span class="co">#&gt;  [7] grid_4.6.1          bookdown_0.48       fastmap_1.2.0      </span></span>
+<span><span class="co">#&gt; [10] cellranger_1.1.0    jsonlite_2.0.0      Matrix_1.7-5       </span></span>
+<span><span class="co">#&gt; [13] BiocManager_1.30.27 crosstalk_1.2.2     textshaping_1.0.5  </span></span>
+<span><span class="co">#&gt; [16] jquerylib_0.1.4     abind_1.4-8         cli_3.6.6          </span></span>
+<span><span class="co">#&gt; [19] rlang_1.3.0         XVector_0.52.0      cachem_1.1.0       </span></span>
+<span><span class="co">#&gt; [22] DelayedArray_0.38.2 yaml_2.3.12         otel_0.2.0         </span></span>
+<span><span class="co">#&gt; [25] S4Arrays_1.12.1     tools_4.6.1         DT_0.34.0          </span></span>
+<span><span class="co">#&gt; [28] vctrs_0.7.3         R6_2.6.1            lifecycle_1.0.5    </span></span>
+<span><span class="co">#&gt; [31] fs_2.1.0            htmlwidgets_1.6.4   ragg_1.5.2         </span></span>
+<span><span class="co">#&gt; [34] pkgconfig_2.0.3     desc_1.4.3          pkgdown_2.2.1      </span></span>
+<span><span class="co">#&gt; [37] bslib_0.12.0        pillar_1.11.1       glue_1.8.1         </span></span>
+<span><span class="co">#&gt; [40] systemfonts_1.3.2   xfun_0.61           tibble_3.3.1       </span></span>
+<span><span class="co">#&gt; [43] knitr_1.52          htmltools_0.5.9     rmarkdown_2.32     </span></span>
+<span><span class="co">#&gt; [46] compiler_4.6.1      readxl_1.5.0.1</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

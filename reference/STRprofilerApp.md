@@ -14,10 +14,11 @@ STRprofilerApp(database = NULL, sampleCol = "Sample", markerCol = "Marker")
 
 - database:
 
-  The reference database. `NULL`, the default, uses the database bundled
-  with the package, of models from The Jackson Laboratory PDX program
-  and the NCI Patient-Derived Models Repository. Otherwise a path to a
-  file
+  The reference database. `NULL`, the default, uses
+  [pdxSTRProfiles](https://j-andrews7.github.io/STRprofilerR/reference/pdxSTRProfiles.md),
+  the database bundled with the package, of models from The Jackson
+  Laboratory PDX program and the NCI Patient-Derived Models Repository.
+  Otherwise a path to a file
   [`readSTRProfiles()`](https://j-andrews7.github.io/STRprofilerR/reference/readSTRProfiles.md)
   can read, or a
   [STRProfiles](https://j-andrews7.github.io/STRprofilerR/reference/STRProfiles.md)
@@ -83,6 +84,11 @@ with your own database, on Posit Connect or a Shiny Server for example,
 deploy an `app.R` containing:
 
     STRprofilerR::STRprofilerApp(database = "my_database.csv")
+
+A ready-made one ships with the package, at
+`system.file("app", "app.R", package = "STRprofilerR")`. It also
+attaches the application's suggested packages so deployment tools bundle
+them.
 
 From a shell, `strprofilerr app --database my_database.csv` runs the
 same application locally.

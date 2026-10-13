@@ -199,11 +199,11 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shiny"</span>, <span class="st">"bslib"</span>, <span class="st">"DT"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">STRprofilerR</span><span class="fu">::</span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Against your own database instead of the bundled one.</span></span>
-<span><span class="fu">STRprofilerR</span><span class="fu">::</span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span>database <span class="op">=</span> <span class="st">"our_database.csv"</span><span class="op">)</span></span></code></pre></div>
-<p>To host it for others, e.g. on Posit Connect or Shiny Server, deploy an <code>app.R</code> containing <code>STRprofilerR::STRprofilerApp(database = "our_database.csv")</code>.</p>
+<span><span class="fu"><a href="reference/STRprofilerApp.html">STRprofilerApp</a></span><span class="op">(</span>database <span class="op">=</span> <span class="st">"our_database.csv"</span><span class="op">)</span></span></code></pre></div>
+<p>To host it for others, e.g. on Posit Connect or Shiny Server, deploy an <code>app.R</code> containing <code>STRprofilerApp(database = "our_database.csv")</code>. One is included with the package, at <code>system.file("app", "app.R", package = "STRprofilerR")</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="alignment-with-the-python-package">Alignment with the Python package<a class="anchor" aria-label="anchor" href="#alignment-with-the-python-package"></a>

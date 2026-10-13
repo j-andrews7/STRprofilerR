@@ -122,15 +122,16 @@ It needs the `shiny`, `bslib`, and `DT` packages:
 
 BiocManager::install(c("shiny", "bslib", "DT"))
 
-STRprofilerR::STRprofilerApp()
+STRprofilerApp()
 
 # Against your own database instead of the bundled one.
-STRprofilerR::STRprofilerApp(database = "our_database.csv")
+STRprofilerApp(database = "our_database.csv")
 ```
 
 To host it for others, e.g. on Posit Connect or Shiny Server, deploy an
-`app.R` containing
-`STRprofilerR::STRprofilerApp(database = "our_database.csv")`.
+`app.R` containing `STRprofilerApp(database = "our_database.csv")`. One
+is included with the package, at
+`system.file("app", "app.R", package = "STRprofilerR")`.
 
 ## Alignment with the Python package
 

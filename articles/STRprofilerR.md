@@ -336,11 +336,11 @@ outDir <- file.path(tempdir(), "STRprofilerR-vignette")
 written <- writeSTRResults(cmp, outDir)
 
 basename(written)
-#> [1] "full_summary.STRprofilerR.20261013.19_02_13.csv" 
-#> [2] "SampleA.STRprofilerR.20261013.19_02_13.csv"      
-#> [3] "SampleB.STRprofilerR.20261013.19_02_13.csv"      
-#> [4] "full_summary.STRprofilerR.20261013.19_02_13.html"
-#> [5] "STRprofilerR.20261013.19_02_13.log"
+#> [1] "full_summary.STRprofilerR.20261013.22_11_55.csv" 
+#> [2] "SampleA.STRprofilerR.20261013.22_11_55.csv"      
+#> [3] "SampleB.STRprofilerR.20261013.22_11_55.csv"      
+#> [4] "full_summary.STRprofilerR.20261013.22_11_55.html"
+#> [5] "STRprofilerR.20261013.22_11_55.log"
 ```
 
 That is a summary table, one table per query listing every reference it
@@ -646,7 +646,7 @@ sessionInfo()
 #>  [5] IRanges_2.46.0              S4Vectors_0.50.3           
 #>  [7] BiocGenerics_0.58.1         generics_0.1.4             
 #>  [9] MatrixGenerics_1.24.0       matrixStats_1.5.0          
-#> [11] STRprofilerR_0.99.0         BiocStyle_2.40.0           
+#> [11] STRprofilerR_0.99.1         BiocStyle_2.40.0           
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] sass_0.4.10         SparseArray_1.12.3  lattice_0.22-9     
